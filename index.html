@@ -12,7 +12,7 @@
         --bg-panel-dark: #f9f7f2;   /* 패널 하단 (매우 연한 베이지) */
         --border-main: #d1cdc0;     /* 메인 테두리 */
         --border-sub: #e2dfd5;      /* 서브 테두리 */
-        --accent-main: #7a8b7c;     /* 포인트 컬러 (올리브 그린 - 편안함) */
+        --accent-main: #7a8b7c;     /* 포인트 컬러 (올리브 그린) */
         --accent-soft: rgba(122, 139, 124, 0.1);
         --accent-gold: #8d7b68;     /* 폰트 포인트 (차분한 브라운) */
         --danger: #e27d60;          /* 강조/경고 */
@@ -22,49 +22,60 @@
 
     body {
         margin: 0; padding: 0;
-        /* 배경을 차분한 실크 느낌의 그라데이션으로 변경 */
         background: radial-gradient(circle at top, #fdfcf9, #ebe7dc);
         font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
         color: var(--text-main);
+        min-height: 100vh;
     }
 
     .container {
-        max-width: 600px; /* 조금 더 아늑하게 조정 */
-        margin: 60px auto;
+        max-width: 500px;
+        margin: 40px auto;
         padding: 40px;
         background: var(--bg-panel);
         border: 1px solid var(--border-main);
-        border-radius: 24px; /* 더 둥글게 해서 부드러운 느낌 부여 */
-        box-shadow: 0 15px 35px rgba(0,0,0,0.05); /* 그림자를 연하게 */
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        position: relative; /* 자동완성 목록의 기준점 */
     }
 
     h1 {
         text-align: center;
         margin-bottom: 26px;
-        font-size: 28px;
+        font-size: 26px;
         font-weight: 700;
-        color: var(--accent-gold); /* 금색 대신 차분한 브라운 */
+        color: var(--accent-gold);
     }
 
     .intro {
         margin-bottom: 30px;
-        padding: 22px;
+        padding: 20px;
         background: #fdfcfb;
         border: 1px solid var(--border-sub);
         border-radius: 14px;
-        line-height: 1.8;
+        line-height: 1.7;
         text-align: center;
         color: var(--text-sub);
-        font-size: 15px;
+        font-size: 14px;
+    }
+
+    .input-group {
+        position: relative; /* 드롭다운 정렬을 위해 추가 */
+        margin-bottom: 20px;
     }
 
     label {
         display: block;
-        margin-top: 18px;
         margin-bottom: 8px;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
         color: var(--text-main);
+    }
+
+    label span {
+        font-size: 12px;
+        color: var(--text-sub);
+        font-weight: normal;
     }
 
     input {
@@ -85,23 +96,58 @@
         box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
+    /* --- 자동완성 목록(suggestions) 핵심 스타일 --- */
+    #suggestions {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 100%; /* 입력창 바로 아래 */
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--accent-main);
+        border-radius: 0 0 12px 12px;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 999; /* 다른 요소보다 무조건 위로 */
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    #suggestions li {
+        padding: 12px 16px;
+        cursor: pointer;
+        font-size: 15px;
+        border-bottom: 1px solid var(--border-sub);
+    }
+
+    #suggestions li:last-child {
+        border-bottom: none;
+    }
+
+    #suggestions li:hover {
+        background-color: var(--accent-soft);
+        color: var(--accent-main);
+        font-weight: 600;
+    }
+
+    /* --- 버튼 및 결과 영역 --- */
     button {
         width: 100%;
-        margin-top: 30px;
+        margin-top: 10px;
         padding: 18px;
         font-size: 18px;
         font-weight: 700;
-        /* 버튼 색상을 신뢰감을 주는 올리브 그린 계열로 변경 */
         background: linear-gradient(180deg, #8b9a8d, #7a8b7c);
         color: #ffffff;
         border: none;
         border-radius: 12px;
         cursor: pointer;
-        transition: opacity 0.2s;
+        transition: transform 0.1s, opacity 0.2s;
     }
 
-    button:hover {
-        opacity: 0.9;
+    button:active {
+        transform: scale(0.98);
     }
 
     .result {
@@ -111,11 +157,27 @@
         border: 1px dotted var(--border-main);
         border-radius: 14px;
         text-align: center;
+        min-height: 60px;
+    }
+
+    #loading {
+        display: none;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--accent-main);
     }
 
     .result strong {
         color: var(--accent-main);
-        font-size: 22px;
+        font-size: 24px;
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            margin: 20px;
+            padding: 20px;
+        }
     }
 </style>
 </head>
@@ -510,3 +572,4 @@
 </body>
 
 </html>
+
