@@ -6,18 +6,17 @@
     <title>노인정 장난감</title>
 <style>
     :root {
-        /* 실버타운 테마: 따뜻한 베이지와 차분한 그린/그레이 */
-        --bg-main: #f4f1ea;          /* 전체 배경 (연한 베이지) */
-        --bg-panel: #ffffff;        /* 패널 배경 (흰색) */
-        --bg-panel-dark: #f9f7f2;   /* 패널 하단 (매우 연한 베이지) */
-        --border-main: #d1cdc0;     /* 메인 테두리 */
-        --border-sub: #e2dfd5;      /* 서브 테두리 */
-        --accent-main: #7a8b7c;     /* 포인트 컬러 (올리브 그린) */
+        --bg-main: #f4f1ea;
+        --bg-panel: #ffffff;
+        --bg-panel-dark: #f9f7f2;
+        --border-main: #d1cdc0;
+        --border-sub: #e2dfd5;
+        --accent-main: #7a8b7c;
         --accent-soft: rgba(122, 139, 124, 0.1);
-        --accent-gold: #8d7b68;     /* 폰트 포인트 (차분한 브라운) */
-        --danger: #e27d60;          /* 강조/경고 */
-        --text-main: #4a4a4a;       /* 메인 글자색 (짙은 그레이) */
-        --text-sub: #7d7d7d;        /* 서브 글자색 */
+        --accent-gold: #8d7b68;
+        --danger: #e27d60;
+        --text-main: #4a4a4a;
+        --text-sub: #7d7d7d;
     }
 
     body {
@@ -36,7 +35,7 @@
         border: 1px solid var(--border-main);
         border-radius: 24px;
         box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-        position: relative; /* 자동완성 목록의 기준점 */
+        position: relative; 
     }
 
     h1 {
@@ -60,7 +59,7 @@
     }
 
     .input-group {
-        position: relative; /* 드롭다운 정렬을 위해 추가 */
+        position: relative; /* 자동완성 목록 기준점 */
         margin-bottom: 20px;
     }
 
@@ -96,22 +95,23 @@
         box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
-    /* --- 자동완성 목록(suggestions) 핵심 스타일 --- */
+    /* --- 자동완성 목록(suggestions) 스타일 --- */
     #suggestions {
         list-style: none;
         padding: 0;
         margin: 0;
         position: absolute;
-        top: 100%; /* 입력창 바로 아래 */
+        top: 100%; 
         left: 0;
         right: 0;
         background: #fff;
         border: 1px solid var(--accent-main);
         border-radius: 0 0 12px 12px;
-        max-height: 250px;
+        max-height: 200px;
         overflow-y: auto;
-        z-index: 999; /* 다른 요소보다 무조건 위로 */
+        z-index: 999; 
         box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        display: none; /* 기본은 숨김 */
     }
 
     #suggestions li {
@@ -121,17 +121,12 @@
         border-bottom: 1px solid var(--border-sub);
     }
 
-    #suggestions li:last-child {
-        border-bottom: none;
-    }
-
     #suggestions li:hover {
         background-color: var(--accent-soft);
         color: var(--accent-main);
         font-weight: 600;
     }
 
-    /* --- 버튼 및 결과 영역 --- */
     button {
         width: 100%;
         margin-top: 10px;
@@ -146,9 +141,7 @@
         transition: transform 0.1s, opacity 0.2s;
     }
 
-    button:active {
-        transform: scale(0.98);
-    }
+    button:active { transform: scale(0.98); }
 
     .result {
         margin-top: 30px;
@@ -167,18 +160,6 @@
         font-size: 14px;
         color: var(--accent-main);
     }
-
-    .result strong {
-        color: var(--accent-main);
-        font-size: 24px;
-    }
-
-    @media (max-width: 480px) {
-        .container {
-            margin: 20px;
-            padding: 20px;
-        }
-    }
 </style>
 </head>
 <body>
@@ -187,12 +168,14 @@
         <div class="intro">
             <strong>업데이트 : 2026/01/06</strong><br>
             정석 대비 <strong>차이값(+/-)</strong>을 입력하세요.<br>
-            페트 이름 입력 후 <strong>엔터</strong>를 치면 자동완성됩니다.
+            페트 이름 입력 시 자동으로 목록이 나타납니다.
         </div>
 
-        <label for="pet-name">페트 이름</label>
-        <input type="text" id="pet-name" placeholder="이름 또는 초성 입력 후 엔터" autocomplete="off">
-        <ul id="suggestions"></ul>
+        <div class="input-group">
+            <label for="pet-name">페트 이름</label>
+            <input type="text" id="pet-name" placeholder="이름 또는 초성 입력" autocomplete="off">
+            <ul id="suggestions"></ul>
+        </div>
 
         <label for="diff-health">체력 차이 <span>(정석 대비)</span></label>
         <input type="number" id="diff-health" value="0">
@@ -213,11 +196,9 @@
     </div>
 
     <script>
-        // ---------------------------
-        // (1) 데이터 및 기초 함수
-        // ---------------------------
-        const petData ={
-    "테로노돈": { "initialCoefficient": 21, "healthCoefficient": 28, "attackCoefficient": 27, "defenseCoefficient": 8, "agilityCoefficient": 36 },
+        // 1. 데이터 정의 (이곳에 데이터를 추가하세요)
+        const petData = {
+               "테로노돈": { "initialCoefficient": 21, "healthCoefficient": 28, "attackCoefficient": 27, "defenseCoefficient": 8, "agilityCoefficient": 36 },
     "고르고르": { "initialCoefficient": 21, "healthCoefficient": 20, "attackCoefficient": 31, "defenseCoefficient": 13, "agilityCoefficient": 28 },
     "킹북이": { "initialCoefficient": 20, "healthCoefficient": 24, "attackCoefficient": 20, "defenseCoefficient": 44, "agilityCoefficient": 5 },
     "타비스": { "initialCoefficient": 26, "healthCoefficient": 25, "attackCoefficient": 38, "defenseCoefficient": 15, "agilityCoefficient": 25 },
@@ -405,26 +386,23 @@
 "흑기린": { "initialCoefficient": 26, "healthCoefficient": 29, "attackCoefficient": 40, "defenseCoefficient": 17, "agilityCoefficient": 19 },
 "우라노스":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 33, "defenseCoefficient": 17, "agilityCoefficient": 29 }
 
-
         };
+
         let currentIdealStats = null;
 
+        // 2. 초성 추출 함수
         function getChosung(str) {
-            const BASE_CODE = 0xAC00;
-            const CHOSUNG_LIST = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+            const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
             let result = "";
-            for (let i = 0; i < str.length; i++) {
-                const code = str.charCodeAt(i);
-                if (code >= 0xAC00 && code <= 0xD7A3) {
-                    result += CHOSUNG_LIST[Math.floor((code - 0xAC00) / 588)];
-                } else { result += str[i]; }
+            for(let i=0; i<str.length; i++) {
+                let code = str.charCodeAt(i) - 44032;
+                if(code > -1 && code < 11172) result += cho[Math.floor(code/588)];
+                else result += str.charAt(i);
             }
             return result;
         }
 
-        // ---------------------------
-        // (2) 정석 스탯 계산 로직
-        // ---------------------------
+        // 3. 정석 스탯 계산 로직
         function calculateIdealStats(pet) {
             const bH = pet.healthCoefficient + 2 + 2.5;
             const bA = pet.attackCoefficient + 2 + 2.5;
@@ -444,59 +422,64 @@
             };
         }
 
-        // ---------------------------
-        // (3) 자동완성 및 엔터 이벤트
-        // ---------------------------
         const petNameInput = document.getElementById("pet-name");
         const suggestions = document.getElementById("suggestions");
 
         function selectPet(name) {
             petNameInput.value = name;
             suggestions.innerHTML = "";
+            suggestions.style.display = "none";
             currentIdealStats = calculateIdealStats(petData[name]);
-            document.getElementById("diff-health").focus(); // 입력창으로 이동
+            document.getElementById("diff-health").focus();
         }
 
+        // 입력창 자동완성 이벤트
         petNameInput.addEventListener("input", () => {
             const query = petNameInput.value.trim();
             suggestions.innerHTML = "";
-            if (!query) return;
+            if (!query) {
+                suggestions.style.display = "none";
+                return;
+            }
 
             const queryChosung = getChosung(query);
             const matches = Object.keys(petData).filter(name => 
                 name.includes(query) || getChosung(name).includes(queryChosung)
             );
 
-            matches.forEach(match => {
-                const li = document.createElement("li");
-                li.textContent = match;
-                li.onclick = () => selectPet(match);
-                suggestions.appendChild(li);
-            });
-        });
-
-        petNameInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                const query = petNameInput.value.trim();
-                const queryChosung = getChosung(query);
-                const matches = Object.keys(petData).filter(name => 
-                    name.includes(query) || getChosung(name).includes(queryChosung)
-                );
-                
-                if (matches.length > 0) {
-                    // 정확히 일치하는게 있으면 그것부터, 없으면 첫번째 매치
-                    const best = matches.find(n => n === query) || matches[0];
-                    selectPet(best);
-                }
+            if (matches.length > 0) {
+                suggestions.style.display = "block";
+                matches.forEach(match => {
+                    const li = document.createElement("li");
+                    li.textContent = match;
+                    li.onclick = () => selectPet(match);
+                    suggestions.appendChild(li);
+                });
+            } else {
+                suggestions.style.display = "none";
             }
         });
 
-        // ---------------------------
-        // (4) 메인 계산 실행
-        // ---------------------------
+        // 엔터키 처리
+        petNameInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const firstLi = suggestions.querySelector("li");
+                if (firstLi) firstLi.click();
+            }
+        });
+
+        // 바탕 클릭 시 닫기
+        document.addEventListener("click", (e) => {
+            if (e.target !== petNameInput) {
+                suggestions.style.display = "none";
+            }
+        });
+
+        // 계산 버튼 클릭
         document.getElementById("calculate-btn").addEventListener("click", () => {
-            if (!currentIdealStats) {
-                alert("페트 이름을 먼저 선택해주세요!");
+            const name = petNameInput.value;
+            if (!petData[name] || !currentIdealStats) {
+                alert("정확한 페트 이름을 선택해주세요!");
                 return;
             }
 
@@ -509,8 +492,8 @@
                 const tD = currentIdealStats.defense + parseInt(document.getElementById("diff-defense").value || 0);
                 const tG = currentIdealStats.agility + parseInt(document.getElementById("diff-agility").value || 0);
 
-                const pet = petData[petNameInput.value];
-                let matched = 0, hCases = 0, total = 0;
+                const pet = petData[name];
+                let matched = 0, hCases = 0;
 
                 for (let hR = -2; hR <= 2; hR++) {
                     for (let aR = -2; aR <= 2; aR++) {
@@ -521,7 +504,6 @@
                                         for (let dB = 0; dB <= 10; dB++) {
                                             const gB = 10 - hB - aB - dB;
                                             if (gB < 0 || gB > 10) continue;
-                                            total++;
 
                                             const iH = ((pet.healthCoefficient + hR + hB) * pet.initialCoefficient) / 100;
                                             const iA = ((pet.attackCoefficient + aR + aB) * pet.initialCoefficient) / 100;
@@ -554,7 +536,7 @@
                         <div>성공 확률 : <strong>${realP}%</strong></div>
                         <div style="margin-top:10px; font-size:14px; color:var(--text-sub);">
                             성공 기대값 : 약 <strong>${expected}번</strong> 시도<br>
-                            <span style="font-size:11px;">(계산된 실제 스탯: ${tH} ${tA} ${tD} ${tG})</span>
+                            <span style="font-size:11px;">(입력된 실제 스탯: ${tH} ${tA} ${tD} ${tG})</span>
                         </div>
                     `;
                 }
@@ -562,14 +544,5 @@
             }, 100);
         });
     </script>
-
-<div style="text-align: center; margin-top: 30px; padding-bottom: 20px;">
-  <a href="https://hits.sh/atorazi.github.io/azrael/">
-    <img alt="Hits" src="https://hits.sh/atorazi.github.io/azrael.svg?view=today-total&style=flat-square&label=염탐&color=ffd45c&labelColor=141e33"/>
-  </a>
-</div>
-
 </body>
-
 </html>
-
