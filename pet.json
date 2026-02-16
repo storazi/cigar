@@ -256,5 +256,6 @@
     "금호":{ "initialCoefficient": 23, "healthCoefficient": 24, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 32 },
     "어스드래곤":{ "initialCoefficient": 29, "healthCoefficient": 47, "attackCoefficient": 36, "defenseCoefficient": 21, "agilityCoefficient": 9 }
 
-    //카가로스
-        };
+
+}
+
