@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>비흡연자의 쉬는시간</title>
+    <title>비흡연자의 쉬는시간 - 시가 계산기</title>
 <style>
     :root {
         --bg-main: #f4f1ea;
         --bg-panel: #ffffff;
-        --bg-panel-dark: #f9f7f2;
         --border-main: #d1cdc0;
         --border-sub: #e2dfd5;
         --accent-main: #7a8b7c;
         --accent-soft: rgba(122, 139, 124, 0.1);
         --accent-gold: #8d7b68;
-        --danger: #e27d60;
         --text-main: #4a4a4a;
         --text-sub: #7d7d7d;
     }
@@ -28,147 +26,85 @@
     }
 
     .container {
-        max-width: 500px;
-        margin: 40px auto;
-        padding: 40px;
+        max-width: 480px;
+        margin: 20px auto;
+        padding: 25px;
         background: var(--bg-panel);
         border: 1px solid var(--border-main);
         border-radius: 24px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-        position: relative; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 26px;
-        font-size: 26px;
-        font-weight: 700;
-        color: var(--accent-gold);
-    }
+    h1 { text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 700; color: var(--accent-gold); }
 
     .intro {
-        margin-bottom: 30px;
-        padding: 20px;
-        background: #fdfcfb;
-        border: 1px solid var(--border-sub);
-        border-radius: 14px;
-        line-height: 1.7;
-        text-align: center;
-        color: var(--text-sub);
-        font-size: 14px;
+        margin-bottom: 25px; padding: 15px; background: #fdfcfb;
+        border: 1px solid var(--border-sub); border-radius: 14px;
+        line-height: 1.6; text-align: center; color: var(--text-sub); font-size: 13px;
     }
 
-    .input-group {
-        position: relative; /* 자동완성 목록 기준점 */
-        margin-bottom: 20px;
+    .input-group { position: relative; margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+
+    #pet-name {
+        width: 100%; padding: 14px; font-size: 16px; border: 1px solid var(--border-main);
+        border-radius: 12px; box-sizing: border-box;
     }
 
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--text-main);
+    /* 스탯 조절 행 레이아웃 (좌측 텍스트 - 우측 버튼그룹) */
+    .stat-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
     }
 
-    label span {
-        font-size: 12px;
-        color: var(--text-sub);
-        font-weight: normal;
+    .stat-label { font-size: 15px; font-weight: 600; }
+    .stat-label span { font-size: 11px; color: var(--text-sub); font-weight: normal; }
+
+    .control-group { display: flex; align-items: center; gap: 6px; }
+
+    input[type="number"] {
+        width: 65px; height: 44px; font-size: 17px; font-weight: 600;
+        border: 1px solid var(--border-main); border-radius: 10px;
+        text-align: center; background: #fafafa;
     }
 
-    input {
-        width: 100%;
-        padding: 14px;
-        font-size: 16px;
-        background: #fff;
-        color: var(--text-main);
-        border: 1px solid var(--border-main);
-        border-radius: 12px;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
+    .btn-step {
+        width: 44px; height: 44px; border: 1px solid var(--border-main);
+        background: #fdfcf9; border-radius: 10px; font-size: 22px;
+        font-weight: bold; color: var(--accent-gold); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
     }
 
-    input:focus {
-        outline: none;
-        border-color: var(--accent-main);
-        box-shadow: 0 0 0 3px var(--accent-soft);
-    }
+    .btn-step:active { background: var(--accent-soft); transform: scale(0.95); }
 
-    /* --- 자동완성 목록(suggestions) 스타일 --- */
+    /* 자동완성 */
     #suggestions {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        position: absolute;
-        top: 100%; 
-        left: 0;
-        right: 0;
-        background: #fff;
-        border: 1px solid var(--accent-main);
-        border-radius: 0 0 12px 12px;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 999; 
+        list-style: none; padding: 0; margin: 0; position: absolute;
+        top: 100%; left: 0; right: 0; background: #fff;
+        border: 1px solid var(--accent-main); border-radius: 0 0 12px 12px;
+        max-height: 200px; overflow-y: auto; z-index: 999; display: none;
         box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        display: none; /* 기본은 숨김 */
+    }
+    #suggestions li { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border-sub); }
+
+    button#calculate-btn {
+        width: 100%; margin-top: 25px; padding: 18px; font-size: 18px;
+        font-weight: 700; background: linear-gradient(180deg, #8b9a8d, #7a8b7c);
+        color: #fff; border: none; border-radius: 12px; cursor: pointer;
     }
 
-    #suggestions li {
-        padding: 12px 16px;
-        cursor: pointer;
-        font-size: 15px;
-        border-bottom: 1px solid var(--border-sub);
-    }
-
-    #suggestions li:hover {
-        background-color: var(--accent-soft);
-        color: var(--accent-main);
-        font-weight: 600;
-    }
-
-    button {
-        width: 100%;
-        margin-top: 10px;
-        padding: 18px;
-        font-size: 18px;
-        font-weight: 700;
-        background: linear-gradient(180deg, #8b9a8d, #7a8b7c);
-        color: #ffffff;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: transform 0.1s, opacity 0.2s;
-    }
-
-    button:active { transform: scale(0.98); }
-
-    .result {
-        margin-top: 30px;
-        padding: 25px;
-        background: #f9f8f6;
-        border: 1px dotted var(--border-main);
-        border-radius: 14px;
-        text-align: center;
-        min-height: 60px;
-    }
-
-    #loading {
-        display: none;
-        text-align: center;
-        margin-top: 15px;
-        font-size: 14px;
-        color: var(--accent-main);
-    }
+    .result { margin-top: 25px; padding: 20px; background: #f9f8f6; border: 1px dotted var(--border-main); border-radius: 14px; text-align: center; }
+    #loading { display: none; text-align: center; margin-top: 15px; color: var(--accent-main); }
 </style>
 </head>
 <body>
     <div class="container">
         <h1>시가 계산기</h1>
         <div class="intro">
-            <strong>업데이트 : 2026/02/12</strong><br>
-            정석 대비 <strong>차이값(+/-)</strong>을 입력하세요.<br>
-            페트 이름 입력 시 자동으로 목록이 나타납니다.
+            <strong>업데이트 : 2026/02/16 </strong><br>
+            정석 대비 <strong>차이값(+/-)</strong>을 입력하세요.
         </div>
 
         <div class="input-group">
@@ -177,17 +113,41 @@
             <ul id="suggestions"></ul>
         </div>
 
-        <label for="diff-health">체력 차이 <span>(정석 대비)</span></label>
-        <input type="number" id="diff-health" value="0">
+        <div class="stat-row">
+            <div class="stat-label">체력 차이 <span>(정석 대비)</span></div>
+            <div class="control-group">
+                <input type="number" id="diff-health" value="0">
+                <button class="btn-step" onclick="step('diff-health', -1)">-</button>
+                <button class="btn-step" onclick="step('diff-health', 1)">+</button>
+            </div>
+        </div>
 
-        <label for="diff-attack">공격력 차이 <span>(정석 대비)</span></label>
-        <input type="number" id="diff-attack" value="0">
+        <div class="stat-row">
+            <div class="stat-label">공격력 차이</div>
+            <div class="control-group">
+                <input type="number" id="diff-attack" value="0">
+                <button class="btn-step" onclick="step('diff-attack', -1)">-</button>
+                <button class="btn-step" onclick="step('diff-attack', 1)">+</button>
+            </div>
+        </div>
 
-        <label for="diff-defense">방어력 차이 <span>(정석 대비)</span></label>
-        <input type="number" id="diff-defense" value="0">
+        <div class="stat-row">
+            <div class="stat-label">방어력 차이</div>
+            <div class="control-group">
+                <input type="number" id="diff-defense" value="0">
+                <button class="btn-step" onclick="step('diff-defense', -1)">-</button>
+                <button class="btn-step" onclick="step('diff-defense', 1)">+</button>
+            </div>
+        </div>
 
-        <label for="diff-agility">순발력 차이 <span>(정석 대비)</span></label>
-        <input type="number" id="diff-agility" value="0">
+        <div class="stat-row">
+            <div class="stat-label">순발력 차이</div>
+            <div class="control-group">
+                <input type="number" id="diff-agility" value="0">
+                <button class="btn-step" onclick="step('diff-agility', -1)">-</button>
+                <button class="btn-step" onclick="step('diff-agility', 1)">+</button>
+            </div>
+        </div>
 
         <button id="calculate-btn">계산하기</button>
 
@@ -459,7 +419,11 @@
 
         let currentIdealStats = null;
 
-        // 2. 초성 추출 함수
+        function step(id, val) {
+            const el = document.getElementById(id);
+            el.value = parseInt(el.value || 0) + val;
+        }
+
         function getChosung(str) {
             const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
             let result = "";
@@ -471,18 +435,15 @@
             return result;
         }
 
-        // 3. 정석 스탯 계산 로직
         function calculateIdealStats(pet) {
             const bH = pet.healthCoefficient + 2 + 2.5;
             const bA = pet.attackCoefficient + 2 + 2.5;
             const bD = pet.defenseCoefficient + 2 + 2.5;
             const bG = pet.agilityCoefficient + 2 + 2.5;
-
             const iH = (bH * pet.initialCoefficient) / 100;
             const iA = (bA * pet.initialCoefficient) / 100;
             const iD = (bD * pet.initialCoefficient) / 100;
             const iG = (bG * pet.initialCoefficient) / 100;
-
             return {
                 health: Math.floor(iH * 4 + iA + iD + iG),
                 attack: Math.floor(iH * 0.1 + iA + iD * 0.1 + iG * 0.05),
@@ -494,57 +455,29 @@
         const petNameInput = document.getElementById("pet-name");
         const suggestions = document.getElementById("suggestions");
 
-        function selectPet(name) {
-            petNameInput.value = name;
-            suggestions.innerHTML = "";
-            suggestions.style.display = "none";
-            currentIdealStats = calculateIdealStats(petData[name]);
-            document.getElementById("diff-health").focus();
-        }
-
-        // 입력창 자동완성 이벤트
         petNameInput.addEventListener("input", () => {
             const query = petNameInput.value.trim();
             suggestions.innerHTML = "";
-            if (!query) {
-                suggestions.style.display = "none";
-                return;
-            }
-
+            if (!query) { suggestions.style.display = "none"; return; }
             const queryChosung = getChosung(query);
             const matches = Object.keys(petData).filter(name => 
                 name.includes(query) || getChosung(name).includes(queryChosung)
             );
-
             if (matches.length > 0) {
                 suggestions.style.display = "block";
                 matches.forEach(match => {
                     const li = document.createElement("li");
                     li.textContent = match;
-                    li.onclick = () => selectPet(match);
+                    li.onclick = () => {
+                        petNameInput.value = match;
+                        suggestions.style.display = "none";
+                        currentIdealStats = calculateIdealStats(petData[match]);
+                    };
                     suggestions.appendChild(li);
                 });
-            } else {
-                suggestions.style.display = "none";
-            }
+            } else { suggestions.style.display = "none"; }
         });
 
-        // 엔터키 처리
-        petNameInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                const firstLi = suggestions.querySelector("li");
-                if (firstLi) firstLi.click();
-            }
-        });
-
-        // 바탕 클릭 시 닫기
-        document.addEventListener("click", (e) => {
-            if (e.target !== petNameInput) {
-                suggestions.style.display = "none";
-            }
-        });
-
-        // 계산 버튼 클릭
         document.getElementById("calculate-btn").addEventListener("click", () => {
             const name = petNameInput.value;
             if (!petData[name] || !currentIdealStats) {
@@ -564,6 +497,7 @@
                 const pet = petData[name];
                 let matched = 0, hCases = 0;
 
+                // 확률 계산 루프
                 for (let hR = -2; hR <= 2; hR++) {
                     for (let aR = -2; aR <= 2; aR++) {
                         for (let dR = -2; dR <= 2; dR++) {
@@ -600,14 +534,12 @@
                     const p = ((hCases / matched) * 100).toFixed(2);
                     const realP = p === "100.00" ? "99.9" : p;
                     const expected = p > 0 ? (100 / p).toFixed(1) : "∞";
-                    
                     document.getElementById("result").innerHTML = `
                         <div>성공 확률 : <strong>${realP}%</strong></div>
                         <div style="margin-top:10px; font-size:14px; color:var(--text-sub);">
                             성공 기대값 : 약 <strong>${expected}번</strong> 시도<br>
-                            <span style="font-size:11px;">(입력된 실제 스탯: ${tH} ${tA} ${tD} ${tG})</span>
-                        </div>
-                    `;
+                            <span style="font-size:11px;">(실제 스탯: ${tH} ${tA} ${tD} ${tG})</span>
+                        </div>`;
                 }
                 document.getElementById("loading").style.display = "none";
             }, 100);
@@ -615,4 +547,3 @@
     </script>
 </body>
 </html>
-
