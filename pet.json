@@ -254,8 +254,26 @@
     "진주토로스":{ "initialCoefficient": 24, "healthCoefficient": 29, "attackCoefficient": 32, "defenseCoefficient": 27, "agilityCoefficient": 18 },
     "한복메이":{ "initialCoefficient": 22, "healthCoefficient": 22, "attackCoefficient": 30, "defenseCoefficient": 15, "agilityCoefficient": 31 },
     "금호":{ "initialCoefficient": 23, "healthCoefficient": 24, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 32 },
-    "어스드래곤":{ "initialCoefficient": 29, "healthCoefficient": 47, "attackCoefficient": 36, "defenseCoefficient": 21, "agilityCoefficient": 9 }
+    "어스드래곤":{ "initialCoefficient": 29, "healthCoefficient": 47, "attackCoefficient": 36, "defenseCoefficient": 21, "agilityCoefficient": 9 },
+    "미르":{ "initialCoefficient": 24, "healthCoefficient": 28, "attackCoefficient": 29, "defenseCoefficient": 9, "agilityCoefficient": 40 },
+    "풍백":{ "initialCoefficient": 24, "healthCoefficient": 24, "attackCoefficient": 34, "defenseCoefficient": 12, "agilityCoefficient": 34 },
+    "테라탄":{ "initialCoefficient": 25, "healthCoefficient": 24, "attackCoefficient": 34, "defenseCoefficient": 13, "agilityCoefficient": 32 },
+    "게이블":{ "initialCoefficient": 25, "healthCoefficient": 27, "attackCoefficient": 33, "defenseCoefficient": 14, "agilityCoefficient": 31 },
+    "가스트":{ "initialCoefficient": 25, "healthCoefficient": 22, "attackCoefficient": 33, "defenseCoefficient": 15, "agilityCoefficient": 34 },
+    "노라돈":{ "initialCoefficient": 25, "healthCoefficient": 26, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 25 },
+    "푸비토스":{ "initialCoefficient": 26, "healthCoefficient": 43, "attackCoefficient": 33, "defenseCoefficient": 31, "agilityCoefficient": 5 },
+    "포포":{ "initialCoefficient": 16, "healthCoefficient": 22, "attackCoefficient": 31, "defenseCoefficient": 11, "agilityCoefficient": 40 },
+    "만모드":{ "initialCoefficient": 27, "healthCoefficient": 50, "attackCoefficient": 31, "defenseCoefficient": 27, "agilityCoefficient": 8 },
+    "판그라":{ "initialCoefficient": 22, "healthCoefficient": 28, "attackCoefficient": 40, "defenseCoefficient": 18, "agilityCoefficient": 18 },
+    "타로아":{ "initialCoefficient": 19, "healthCoefficient": 28, "attackCoefficient": 36, "defenseCoefficient": 18, "agilityCoefficient": 23 },
+    "자라북":{ "initialCoefficient": 16, "healthCoefficient": 24, "attackCoefficient": 22, "defenseCoefficient": 36, "agilityCoefficient": 6 },
+    "베라라":{ "initialCoefficient": 23, "healthCoefficient": 23, "attackCoefficient": 32, "defenseCoefficient": 13, "agilityCoefficient": 30 },
+    "파이톤":{ "initialCoefficient": 24, "healthCoefficient": 22, "attackCoefficient": 35, "defenseCoefficient": 12, "agilityCoefficient": 23 },
+    "골드로비":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 35, "defenseCoefficient": 15, "agilityCoefficient": 29 },
+    "헬노스":{ "initialCoefficient": 24, "healthCoefficient": 21, "attackCoefficient": 36, "defenseCoefficient": 11, "agilityCoefficient": 30 },
+    "지마":{ "initialCoefficient": 25, "healthCoefficient": 28, "attackCoefficient": 37, "defenseCoefficient": 20, "agilityCoefficient": 21 },
+    "백호":{ "initialCoefficient": 27, "healthCoefficient": 28, "attackCoefficient": 36, "defenseCoefficient": 17, "agilityCoefficient": 25 },
+    "로데오":{ "initialCoefficient": 27, "healthCoefficient": 23, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 27 },
 
 
-}
-
+        };
