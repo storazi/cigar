@@ -276,5 +276,6 @@
     "로데오":{ "initialCoefficient": 27, "healthCoefficient": 23, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 27 }
 
 
-        };
+}
+
 
