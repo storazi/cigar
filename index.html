@@ -48,7 +48,7 @@
 
     #pet-name {
         width: 100%; padding: 14px; font-size: 16px; border: 1px solid var(--border-main);
-        border-radius: 12px; box-sizing: border-box;
+        border-radius: 12px; box-sizing: border-box; outline-color: var(--accent-main);
     }
 
     .stat-row {
@@ -78,19 +78,28 @@
 
     .btn-step:active { background: var(--accent-soft); transform: scale(0.95); }
 
+    /* 자동완성 목록 스타일 개선 */
     #suggestions {
         list-style: none; padding: 0; margin: 0; position: absolute;
         top: 100%; left: 0; right: 0; background: #fff;
-        border: 1px solid var(--accent-main); border-radius: 0 0 12px 12px;
-        max-height: 200px; overflow-y: auto; z-index: 999; display: none;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        border: 1px solid var(--accent-main); border-top: none;
+        border-radius: 0 0 12px 12px;
+        max-height: 240px; overflow-y: auto; z-index: 999; display: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    #suggestions li { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border-sub); }
+    #suggestions li { 
+        padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border-sub); 
+        font-size: 15px; transition: background 0.2s;
+    }
+    #suggestions li:last-child { border-bottom: none; }
+    #suggestions li:hover { background-color: var(--accent-soft); }
+    #suggestions li strong { color: var(--accent-gold); font-weight: 700; }
 
     button#calculate-btn {
         width: 100%; margin-top: 25px; padding: 18px; font-size: 18px;
         font-weight: 700; background: linear-gradient(180deg, #8b9a8d, #7a8b7c);
         color: #fff; border: none; border-radius: 12px; cursor: pointer;
+        transition: opacity 0.2s;
     }
 
     button:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -166,7 +175,6 @@
                 if (!response.ok) throw new Error('파일을 찾을 수 없습니다.');
                 petData = await response.json();
                 
-                // 데이터 로드 성공 시 입력창 활성화
                 const nameInput = document.getElementById("pet-name");
                 nameInput.disabled = false;
                 nameInput.placeholder = "이름 또는 초성 입력";
@@ -216,34 +224,73 @@
         const petNameInput = document.getElementById("pet-name");
         const suggestions = document.getElementById("suggestions");
 
+        // 자동완성 로직 개선
         petNameInput.addEventListener("input", () => {
             const query = petNameInput.value.trim();
             suggestions.innerHTML = "";
-            if (!query) { suggestions.style.display = "none"; return; }
+            
+            if (!query) {
+                suggestions.style.display = "none";
+                return;
+            }
+
             const queryChosung = getChosung(query);
-            const matches = Object.keys(petData).filter(name => 
-                name.includes(query) || getChosung(name).includes(queryChosung)
-            );
+            const petNames = Object.keys(petData);
+
+            // 매칭 및 가중치 점수 부여
+            const matches = petNames
+                .map(name => {
+                    const nameChosung = getChosung(name);
+                    let score = -1;
+
+                    if (name === query) score = 4; // 정확히 일치
+                    else if (name.startsWith(query)) score = 3; // 시작부분 일치
+                    else if (name.includes(query)) score = 2; // 포함됨
+                    else if (nameChosung.startsWith(queryChosung)) score = 1; // 초성 시작 일치
+                    else if (nameChosung.includes(queryChosung)) score = 0; // 초성 포함됨
+
+                    return { name, score };
+                })
+                .filter(item => item.score > -1)
+                .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name)); // 점수순 -> 가나다순
+
             if (matches.length > 0) {
                 suggestions.style.display = "block";
-                matches.forEach(match => {
+                matches.slice(0, 12).forEach(match => {
                     const li = document.createElement("li");
-                    li.textContent = match;
+                    // 검색어 부분 강조
+                    const highlighted = match.name.replace(new RegExp(query, 'gi'), (m) => `<strong>${m}</strong>`);
+                    li.innerHTML = highlighted;
+                    
                     li.onclick = () => {
-                        petNameInput.value = match;
+                        petNameInput.value = match.name;
                         suggestions.style.display = "none";
-                        currentIdealStats = calculateIdealStats(petData[match]);
+                        currentIdealStats = calculateIdealStats(petData[match.name]);
                         document.getElementById("result").innerText = "스탯 차이를 입력하고 계산을 눌러주세요.";
                     };
                     suggestions.appendChild(li);
                 });
-            } else { suggestions.style.display = "none"; }
+            } else {
+                suggestions.style.display = "none";
+            }
+        });
+
+        // 입력창 외부 클릭 시 리스트 닫기
+        document.addEventListener("click", (e) => {
+            if (e.target !== petNameInput) {
+                suggestions.style.display = "none";
+            }
         });
 
         document.getElementById("calculate-btn").addEventListener("click", () => {
             const name = petNameInput.value;
+            // 리스트에서 선택하지 않고 직접 입력했을 경우를 대비해 데이터 확인 후 계산
+            if (petData[name]) {
+                currentIdealStats = calculateIdealStats(petData[name]);
+            }
+
             if (!petData[name] || !currentIdealStats) {
-                alert("정확한 페트 이름을 선택해주세요!");
+                alert("정확한 페트 이름을 목록에서 선택해주세요!");
                 return;
             }
 
@@ -305,8 +352,6 @@
                 document.getElementById("loading").style.display = "none";
             }, 500);
         });
-
-
     </script>
 
 <footer style="text-align: center; margin: 40px 0 20px 0; padding: 20px 0;">
@@ -322,6 +367,3 @@
 
 </body>
 </html>
-
-
-
