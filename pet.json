@@ -273,7 +273,8 @@
     "헬노스":{ "initialCoefficient": 24, "healthCoefficient": 21, "attackCoefficient": 36, "defenseCoefficient": 11, "agilityCoefficient": 30 },
     "지마":{ "initialCoefficient": 25, "healthCoefficient": 28, "attackCoefficient": 37, "defenseCoefficient": 20, "agilityCoefficient": 21 },
     "백호":{ "initialCoefficient": 27, "healthCoefficient": 28, "attackCoefficient": 36, "defenseCoefficient": 17, "agilityCoefficient": 25 },
-    "로데오":{ "initialCoefficient": 27, "healthCoefficient": 23, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 27 },
+    "로데오":{ "initialCoefficient": 27, "healthCoefficient": 23, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 27 }
 
 
         };
+
