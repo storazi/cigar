@@ -281,8 +281,21 @@
     "와일로":{ "initialCoefficient": 25, "healthCoefficient": 30, "attackCoefficient": 34, "defenseCoefficient": 19, "agilityCoefficient": 22 },
     "샤베르":{ "initialCoefficient": 24, "healthCoefficient": 27, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 30 },
     "바로스":{ "initialCoefficient": 23, "healthCoefficient": 25, "attackCoefficient": 36, "defenseCoefficient": 17, "agilityCoefficient": 26 },
-    "청풍":{ "initialCoefficient": 24, "healthCoefficient": 30, "attackCoefficient": 34, "defenseCoefficient": 13, "agilityCoefficient": 30 }
-      
+    "청풍":{ "initialCoefficient": 24, "healthCoefficient": 30, "attackCoefficient": 34, "defenseCoefficient": 13, "agilityCoefficient": 30 },
+    "지고르":{ "initialCoefficient": 24, "healthCoefficient": 30, "attackCoefficient": 34, "defenseCoefficient": 13, "agilityCoefficient": 30 },
+    "테라죠":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 37, "defenseCoefficient": 17, "agilityCoefficient": 25 },
+    "메가죠":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 40, "defenseCoefficient": 16, "agilityCoefficient": 23 },
+    "메가로돈":{ "initialCoefficient": 25, "healthCoefficient": 30, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 22 },
+    "테라로돈":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 37, "defenseCoefficient": 20, "agilityCoefficient": 22 },
+    "메라로돈":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 25 },
+    "베모티스":{ "initialCoefficient": 25, "healthCoefficient": 49, "attackCoefficient": 10, "defenseCoefficient": 44, "agilityCoefficient": 11 },
+    "노리로스":{ "initialCoefficient": 24, "healthCoefficient": 44, "attackCoefficient": 34, "defenseCoefficient": 12, "agilityCoefficient": 21 }
+
+
+
+
+
+
+
 
 }
-
