@@ -289,7 +289,8 @@
     "테라로돈":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 37, "defenseCoefficient": 20, "agilityCoefficient": 22 },
     "메라로돈":{ "initialCoefficient": 25, "healthCoefficient": 25, "attackCoefficient": 38, "defenseCoefficient": 16, "agilityCoefficient": 25 },
     "베모티스":{ "initialCoefficient": 25, "healthCoefficient": 49, "attackCoefficient": 10, "defenseCoefficient": 44, "agilityCoefficient": 11 },
-    "노리로스":{ "initialCoefficient": 24, "healthCoefficient": 44, "attackCoefficient": 34, "defenseCoefficient": 12, "agilityCoefficient": 21 },
+    "노리로스":{ "initialCoefficient": 24, "healthCoefficient": 44, "attackCoefficient": 34, "defenseCoefficient": 12, "agilityCoefficient": 21 }
+    “야무리”:{ "initialCoefficient": 26, "healthCoefficient": 29, "attackCoefficient": 36, "defenseCoefficient": 26, "agilityCoefficient": 14 },
     "헤머드":{ "initialCoefficient": 25, "healthCoefficient": 30, "attackCoefficient": 34, "defenseCoefficient": 19, "agilityCoefficient": 22 }
 
 
@@ -299,3 +300,4 @@
 
 
 }
+
