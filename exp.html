@@ -3,135 +3,177 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>📘 경험치 계산기 (필요량 합산 방식)</title>
+    <title>📘 경험치 계산기</title>
     <style>
+        /* 🎨 Cigar Style Dark Theme */
         :root {
-            --bg-color: #0b1220;
-            --card-bg: #161f30;
-            --text-color: #e0e0e0;
-            --accent-color: #ffd447;
-            --input-bg: #1e293b;
+            --bg-color: #0a0a0a;
+            --card-bg: #111111;
+            --input-bg: #161616;
+            --accent-gold: linear-gradient(135deg, #ffd447 0%, #ff9500 100%);
+            --text-gold: #ffd447;
+            --text-main: #e0e0e0;
+            --text-dim: #94a3b8;
+            --border-color: #222222;
         }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            font-family: 'Pretendard', -apple-system, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .calculator-card {
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
             width: 100%;
             max-width: 450px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
         }
 
         h2 {
             margin-top: 0;
-            color: var(--accent-color);
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--accent-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-align: center;
-            font-size: 1.5rem;
-            border-bottom: 2px solid rgba(255,212,71,0.2);
-            padding-bottom: 10px;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 18px;
         }
 
         .field {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
         }
 
         label {
-            font-size: 0.9rem;
-            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-left: 4px;
         }
 
         input {
             background: var(--input-bg);
-            border: 1px solid #334155;
-            padding: 12px;
-            border-radius: 8px;
+            border: 1px solid #333;
+            padding: 14px;
+            border-radius: 10px;
             color: white;
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
         }
 
         input:focus {
-            border-color: var(--accent-color);
+            border-color: #ffd447;
+            background: #1a1a1a;
+            box-shadow: 0 0 10px rgba(255, 212, 71, 0.1);
+        }
+
+        input::placeholder {
+            color: #444;
+            font-size: 0.9rem;
         }
 
         .btn-container {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 10px;
         }
 
         button {
             flex: 1;
-            padding: 12px;
+            padding: 15px;
             border: none;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1rem;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: 0.3s;
         }
 
-        #run { background: var(--accent-color); color: #000; }
-        #reset { background: #444; color: white; }
-        button:hover { opacity: 0.9; }
+        #run {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        #reset {
+            background: #222;
+            color: var(--text-dim);
+            border: 1px solid #333;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
 
         #results {
-            margin-top: 25px;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-color);
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            border-left: 4px solid #ff9500;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .res-item {
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
+            margin: 12px 0;
             font-size: 0.95rem;
         }
 
         .res-val {
-            color: var(--accent-color);
-            font-weight: bold;
+            color: var(--text-gold);
+            font-weight: 800;
+            text-shadow: 0 0 8px rgba(255, 212, 71, 0.2);
         }
 
         footer {
             text-align: center;
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #64748b;
+            margin-top: 25px;
+            font-size: 0.75rem;
+            color: #444;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
 <div class="calculator-card">
-    <h2>📘 경험치 계산기</h2>
+    <h2>📘 EXPERIENCE CALC</h2>
     
     <div class="input-group">
         <div class="field">
-            <label>현재 레벨</label>
+            <label>현재 레벨 (Current Lv)</label>
             <input type="number" id="currentLevel" placeholder="1 ~ 139" min="1" max="139">
         </div>
         <div class="field">
@@ -139,11 +181,11 @@
             <input type="number" id="currentPercent" placeholder="0 ~ 99.99" step="0.001" min="0" max="99.99">
         </div>
         <div class="field">
-            <label>목표 레벨</label>
+            <label>목표 레벨 (Target Lv)</label>
             <input type="number" id="targetLevel" placeholder="최대 140" min="2" max="140">
         </div>
         <div class="field">
-            <label>시간당 획득 경험치</label>
+            <label>시간당 획득 경험치 (Exp/h)</label>
             <input type="number" id="xpPerHour" placeholder="경험치 획득량 입력">
         </div>
 
@@ -168,11 +210,10 @@
         </div>
     </div>
 
-    <footer>© 2026 sup_bot </footer>
+    <footer>MAZE REST TOOLBOX</footer>
 </div>
 
 <script>
-    // 테이블의 값은 해당 레벨에서 '다음 레벨로 가기 위해 필요한 경험치'입니다.
     const EXP_TABLE = {
         1: 2, 2: 6, 3: 14, 4: 30, 5: 54, 6: 89, 7: 135, 8: 198, 9: 550, 10: 742,
         11: 974, 12: 1253, 13: 1576, 14: 1954, 15: 2386, 16: 2878, 17: 3432, 18: 4056, 19: 4749, 20: 5517,
@@ -216,14 +257,9 @@
         }
 
         let totalRemainExp = 0;
-
-        // 1. 현재 레벨에서 다음 레벨까지 남은 양 계산
-        // (현재 레벨 필요량 * (100 - 현재퍼센트) / 100)
         const currentLevelNeed = EXP_TABLE[curLv];
         totalRemainExp += currentLevelNeed * (1 - (curPer / 100));
 
-        // 2. 현재 레벨 다음부터 목표 레벨 직전까지의 모든 필요량을 더함
-        // 예: 1에서 3이 목표면, 1레벨 남은거 + 2레벨 전체 필요량을 더함
         for (let i = curLv + 1; i < tarLv; i++) {
             totalRemainExp += EXP_TABLE[i];
         }
