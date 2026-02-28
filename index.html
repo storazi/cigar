@@ -137,7 +137,7 @@
             }
             .nav-menu::-webkit-scrollbar { display: none; }
             .sidebar button { padding: 10px 15px; font-size: 13px; }
-            .sidebar-footer { display: none; } /* 모바일은 배지 숨김 (공간 확보) */
+            .sidebar-footer { display: none; }
             .content { padding: 20px; }
             h2 { font-size: 1.3rem; }
         }
@@ -153,6 +153,7 @@
             <button id="tabAnsi">🎨 텍스트 효과</button>
             <button id="tabExp">📘 경험치 계산기 </button>
             <button id="tabCalc">🔥 환각 계산기</button>
+            <button id="tabPoison">🧪 맹독 계산기</button>
             <button id="tabOmok">⭕ 오목</button>
         </div>
 
@@ -187,6 +188,11 @@
             <div class="frame-wrapper"><iframe src="./rebirth.html" class="full-iframe"></iframe></div>
         </section>
 
+        <section id="poisonTab" class="tab-content">
+            <h2>맹독 계산기</h2>
+            <div class="frame-wrapper"><iframe src="./poison.html" class="full-iframe"></iframe></div>
+        </section>
+
         <section id="omokTab" class="tab-content">
             <h2>오목 AI</h2>
             <div class="frame-wrapper"><iframe src="./omok.html" class="full-iframe"></iframe></div>
@@ -199,15 +205,16 @@
             tabAnsi: "./ansi.html",
             tabExp: "./exp.html",
             tabCalc: "./rebirth.html",
+            tabPoison: "./poison.html",
             tabOmok: "./omok.html"
         };
 
-        // 모바일 여부 판별 (너비 기준 또는 터치 기기 기준)
+        // 모바일 여부 판별
         function isMobile() {
             return window.innerWidth <= 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
         }
 
-        // iframe 높이 조절 (PC 전용)
+        // iframe 높이 조절
         function adjustFrameHeight() {
             const activeTab = document.querySelector(".tab-content.active");
             const iframe = activeTab?.querySelector("iframe");
@@ -218,22 +225,19 @@
             }
         }
 
-        // 버튼 클릭 이벤트 통합 관리
+        // 버튼 클릭 이벤트
         document.querySelectorAll(".sidebar button").forEach(btn => {
             btn.addEventListener("click", function() {
                 const id = this.id;
 
-                // 1. 홈 탭 처리 (모바일/PC 공통)
                 if (id === 'tabHome') {
                     switchTab(id, 'homeTab');
                     return;
                 }
 
-                // 2. 모바일인 경우 새 창으로 열기
                 if (isMobile()) {
                     window.open(config[id], '_blank');
                 } 
-                // 3. PC인 경우 내부 탭 전환
                 else {
                     const targetSectionId = id.replace('tab', '').toLowerCase() + 'Tab';
                     switchTab(id, targetSectionId);
