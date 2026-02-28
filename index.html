@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>🐂 비흡연자의 쉬는시간</title>
     <style>
         :root {
@@ -15,6 +15,8 @@
             --border-color: #222222;
         }
 
+        * { box-sizing: border-box; }
+
         body { 
             margin: 0; padding: 0; 
             background-color: var(--bg-color); 
@@ -23,7 +25,7 @@
             display: flex; height: 100vh; overflow: hidden; 
         }
 
-        /* 🚪 사이드바 레이아웃 */
+        /* 🚪 사이드바 (데스크톱) */
         .sidebar { 
             width: 240px; 
             background: var(--sidebar-bg); 
@@ -32,6 +34,7 @@
             flex-direction: column; 
             padding: 30px 15px; 
             flex-shrink: 0; 
+            transition: 0.3s;
         }
 
         .sidebar-title { 
@@ -44,12 +47,11 @@
             -webkit-text-fill-color: transparent; 
         }
 
-        /* 메뉴 버튼 영역 */
         .nav-menu {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            flex-grow: 1; /* 남은 공간을 차지하여 푸터를 아래로 밀어냄 */
+            flex-grow: 1;
         }
 
         .sidebar button { 
@@ -61,7 +63,8 @@
             border-radius: 10px; 
             cursor: pointer; 
             transition: 0.3s; 
-            font-size: 14px; 
+            font-size: 14px;
+            white-space: nowrap;
         }
 
         .sidebar button:hover { border-color: #ffd447; color: #fff; background: rgba(255, 212, 71, 0.05); }
@@ -73,23 +76,16 @@
             box-shadow: 0 4px 20px rgba(255, 149, 0, 0.25); 
         }
 
-        /* 👣 사이드바 하단 푸터 */
         .sidebar-footer {
-            margin-top: auto; /* 하단 고정 */
+            margin-top: auto;
             padding-top: 20px;
             text-align: center;
             border-top: 1px solid var(--border-color);
         }
 
-        .sidebar-footer img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-
         /* 🖼 콘텐츠 영역 */
-        .content { flex: 1; padding: 40px; overflow-y: auto; }
-        .tab-content { display: none; }
+        .content { flex: 1; padding: 40px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .tab-content { display: none; height: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
 
         @keyframes fadeIn { 
@@ -103,31 +99,67 @@
             border-radius: 20px; 
             padding: 30px; 
             margin-bottom: 25px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
         }
 
-        h2 { margin-top: 0; font-size: 1.6rem; color: #ffd447; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        h2::before { content: ''; width: 4px; height: 24px; background: var(--accent-gold); border-radius: 10px; }
+        h2 { margin-top: 0; font-size: 1.4rem; color: #ffd447; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        h2::before { content: ''; width: 4px; height: 20px; background: var(--accent-gold); border-radius: 10px; }
 
         .frame-wrapper { 
             width: 100%; background: #000; 
             border-radius: 15px; overflow: hidden; 
-            border: 1px solid #333; margin-top: 15px; 
+            border: 1px solid #333; position: relative;
         }
-        .full-iframe { width: 100%; border: none; background: #000; display: block; }
+        .full-iframe { width: 100%; border: none; background: #000; display: block; height: 100%; }
+
+        /* 📱 모바일 대응 (화면 너비 768px 이하) */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .sidebar-title { margin-bottom: 15px; font-size: 1rem; }
+
+            .nav-menu {
+                flex-direction: row;
+                overflow-x: auto; /* 가로 스크롤 가능하게 */
+                padding-bottom: 10px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-menu::-webkit-scrollbar { display: none; } /* 스크롤바 숨김 */
+
+            .sidebar button {
+                padding: 10px 15px;
+                font-size: 13px;
+                flex-shrink: 0;
+            }
+
+            .sidebar-footer { display: none; } /* 모바일에서 공간 확보를 위해 푸터 숨김 */
+
+            .content { padding: 20px; }
+            
+            h2 { font-size: 1.2rem; }
+        }
     </style>
 </head>
 <body>
 
     <nav class="sidebar">
-        <div class="sidebar-title">비흡연자의 쉬는시간</div>
+        <div class="sidebar-title">쉬는시간</div>
         
         <div class="nav-menu">
             <button id="tabHome" class="active">🏠 홈</button>
-            <button id="tabAnsi">🎨 디스코드 텍스트</button>
-            <button id="tabExp">📘 경험치 계산기</button>
-            <button id="tabCalc">🔥 환각 계산기</button>
-            <button id="tabOmok">⭕ 오목 AI</button>
+            <button id="tabAnsi">🎨 텍스트</button>
+            <button id="tabExp">📘 경험치</button>
+            <button id="tabCalc">🔥 환각</button>
+            <button id="tabOmok">⭕ 오목</button>
         </div>
 
         <footer class="sidebar-footer">
@@ -135,7 +167,7 @@
                 <img alt="Hits" src="https://hits.sh/storazi.github.io/cigar.svg?view=today-total&style=flat-square&label=VISITORS&color=ff9500&labelColor=222222"/>
             </a>
             <p style="font-size: 11px; color: var(--text-dim); margin-top:10px; opacity:0.6;">
-                © 2026 sup_bot All rights reserved.
+                © 2026 sup_bot
             </p>
         </footer>
     </nav>
@@ -144,12 +176,12 @@
         <section id="homeTab" class="tab-content active">
             <div class="card">
                 <h2>비흡연자의 쉬는시간</h2>
-                <p style="color:var(--text-dim); line-height: 1.6;">이 페이지는 시가 부족원을 위해 만들어졌습니다.</p>
+                <p style="color:var(--text-dim); line-height: 1.6; font-size: 14px;">이 사이트는 시가 부족원을 위해 만들어졌습니다.</p>
             </div>
         </section>
 
         <section id="ansiTab" class="tab-content">
-            <h2>디스코드 텍스트 생성기</h2>
+            <h2>디스코드 텍스트</h2>
             <div class="frame-wrapper">
                 <iframe src="./ansi.html" class="full-iframe"></iframe>
             </div>
@@ -170,7 +202,7 @@
         </section>
 
         <section id="omokTab" class="tab-content">
-            <h2>오목 AI (렌주룰)</h2>
+            <h2>오목 AI</h2>
             <div class="frame-wrapper">
                 <iframe src="./omok.html" id="omokFrame" class="full-iframe"></iframe>
             </div>
@@ -192,7 +224,8 @@
             if (iframe) {
                 const vh = window.innerHeight;
                 const rect = iframe.getBoundingClientRect();
-                iframe.style.height = (vh - rect.top - 40) + "px";
+                // 화면 하단에서 여유공간 20px 확보
+                iframe.style.height = (vh - rect.top - 20) + "px";
             }
         }
 
@@ -202,12 +235,17 @@
                 document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
                 this.classList.add("active");
                 document.getElementById(tabs[key]).classList.add("active");
-                setTimeout(adjustFrameHeight, 50);
+                
+                // 탭 전환 후 높이 재조정
+                setTimeout(adjustFrameHeight, 100);
             });
         });
 
+        // 윈도우 크기 변경 시 높이 자동 조절
         window.addEventListener("resize", adjustFrameHeight);
-        window.onload = adjustFrameHeight;
+        window.onload = () => {
+            setTimeout(adjustFrameHeight, 200);
+        };
     </script>
 </body>
 </html>
