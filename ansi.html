@@ -1,199 +1,256 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title></title>
-<style>
-:root {
-  --bg: #0b1220;
-  --panel: #121a2b;
-  --text: #eaf2ff;
-  --muted: #9aa6c0;
-  --accent: #ffd447;
-  --border: #24324b;
-}
-html, body {
-  font-family: "Pretendard", sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-  text-align: center;
-  margin: 0;
-  padding: 30px 10px;
-}
-.container {
-  max-width: 700px;
-  margin: auto;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.3);
-}
-h1 {
-  color: var(--accent);
-  font-size: 1.8rem;
-  margin-bottom: 16px;
-}
-p { color: var(--muted); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>🎨 디스코드 ANSI 생성기</title>
+    <style>
+        /* 🎨 Cigar Style Dark Theme */
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #111111;
+            --input-bg: #161616;
+            --accent-gold: linear-gradient(135deg, #ffd447 0%, #ff9500 100%);
+            --text-gold: #ffd447;
+            --text-main: #e0e0e0;
+            --text-dim: #94a3b8;
+            --border-color: #222222;
+        }
 
-#textarea {
-  width: 100%;
-  min-height: 220px;
-  border-radius: 8px;
-  background-color: #1a2235;
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 10px;
-  white-space: pre-wrap;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.9rem;
-  line-height: 1.3rem;
-  text-align: left;
-  overflow-y: auto;
-  resize: vertical;
-}
-.button {
-  border: none;
-  border-radius: 6px;
-  color: #000;
-  background-color: var(--accent);
-  font-weight: 600;
-  font-size: 14px;
-  padding: 6px 14px;
-  cursor: pointer;
-  margin: 4px;
-  transition: 0.2s;
-}
-.button:hover {
-  filter: brightness(1.2);
-}
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-.fg-btn, .bg-btn {
-  width: 34px; height: 34px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  margin: 3px; cursor: pointer;
-  transition: 0.2s;
-}
-.fg-btn:hover, .bg-btn:hover {
-  transform: scale(1.1);
-}
-.fg-btn { background: #1a2235; font-weight: bold; font-size: 18px; }
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
 
-.ansi-1 { font-weight: bold; }
-.ansi-4 { text-decoration: underline; }
+        h2 {
+            margin-top: 0;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--accent-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
 
-.fg30 { color: #888; } .fg31 { color: #ff6b81; }
-.fg32 { color: #36d17b; } .fg33 { color: #ffbd4a; }
-.fg34 { color: #3ba4f7; } .fg35 { color: #d78fee; }
-.fg36 { color: #52e2e2; } .fg37 { color: #ffffff; }
+        p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 25px; }
 
-.bg40 { background-color: #111722; }
-.bg41 { background-color: #3b1a1a; }
-.bg42 { background-color: #123d2d; }
-.bg43 { background-color: #4d3b15; }
-.bg44 { background-color: #15284d; }
-.bg45 { background-color: #2b1852; }
-.bg46 { background-color: #15454a; }
-.bg47 { background-color: #bfc0c0; }
-</style>
+        /* 🛠 컨트롤 도구들 */
+        .toolbar-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        h3 {
+            font-size: 0.8rem;
+            color: var(--text-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 10px;
+        }
+
+        .button {
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            background: var(--accent-gold);
+            font-weight: 700;
+            font-size: 13px;
+            padding: 8px 16px;
+            cursor: pointer;
+            margin: 4px;
+            transition: 0.2s;
+        }
+
+        .button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .button.secondary { background: #222; color: var(--text-dim); border: 1px solid #333; }
+
+        /* 🎨 색상 버튼 */
+        .color-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
+        
+        .fg-btn, .bg-btn {
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .fg-btn:hover, .bg-btn:hover { transform: scale(1.15); border-color: #fff; }
+
+        /* ANSI 컬러 매칭 */
+        .fg30 { color: #888; } .fg31 { color: #ff6b81; } .fg32 { color: #36d17b; } .fg33 { color: #ffbd4a; }
+        .fg34 { color: #3ba4f7; } .fg35 { color: #d78fee; } .fg36 { color: #52e2e2; } .fg37 { color: #ffffff; }
+
+        .bg40 { background-color: #111722; } .bg41 { background-color: #431d1d; } .bg42 { background-color: #1a4331; } .bg43 { background-color: #534017; }
+        .bg44 { background-color: #1a2a43; } .bg45 { background-color: #311a43; } .bg46 { background-color: #1a4143; } .bg47 { background-color: #bfc0c0; }
+
+        /* 📝 편집 영역 */
+        #textarea {
+            width: 100%;
+            min-height: 200px;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #fff;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: left;
+            outline: none;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        #textarea:focus { border-color: #ffd447; box-shadow: 0 0 15px rgba(255, 212, 71, 0.1); }
+
+        .ansi-1 { font-weight: bold; }
+        .ansi-4 { text-decoration: underline; }
+
+        .copy-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-gold);
+            color: #000;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        footer { margin-top: 20px; font-size: 0.75rem; color: #444; letter-spacing: 1px; }
+    </style>
 </head>
 <body>
 
-<h1></h1>
-
 <div class="container">
-  <p>텍스트 일부를 선택한 후 색상 또는 굵기 버튼을 눌러보세요.</p>
+    <h2>🎨 DISCORD ANSI EDITOR</h2>
+    <p>텍스트 선택 후 스타일을 적용하세요.</p>
 
-  <button data-ansi="0" class="button style-button">Reset</button>
-  <button data-ansi="1" class="button style-button ansi-1">Bold</button>
-  <button data-ansi="4" class="button style-button ansi-4">Underline</button>
+    <div class="toolbar-group">
+        <button data-ansi="0" class="button secondary style-button">Reset</button>
+        <button data-ansi="1" class="button style-button ansi-1">Bold</button>
+        <button data-ansi="4" class="button style-button ansi-4">Underline</button>
 
-  <h3>전경색</h3>
-  <div>
-    <button data-ansi="30" class="fg-btn fg30">A</button>
-    <button data-ansi="31" class="fg-btn fg31">A</button>
-    <button data-ansi="32" class="fg-btn fg32">A</button>
-    <button data-ansi="33" class="fg-btn fg33">A</button>
-    <button data-ansi="34" class="fg-btn fg34">A</button>
-    <button data-ansi="35" class="fg-btn fg35">A</button>
-    <button data-ansi="36" class="fg-btn fg36">A</button>
-    <button data-ansi="37" class="fg-btn fg37">A</button>
-  </div>
+        <h3>Foreground Color</h3>
+        <div class="color-row">
+            <button data-ansi="30" class="fg-btn fg30">A</button>
+            <button data-ansi="31" class="fg-btn fg31">A</button>
+            <button data-ansi="32" class="fg-btn fg32">A</button>
+            <button data-ansi="33" class="fg-btn fg33">A</button>
+            <button data-ansi="34" class="fg-btn fg34">A</button>
+            <button data-ansi="35" class="fg-btn fg35">A</button>
+            <button data-ansi="36" class="fg-btn fg36">A</button>
+            <button data-ansi="37" class="fg-btn fg37">A</button>
+        </div>
 
-  <h3>배경색</h3>
-  <div>
-    <button data-ansi="40" class="bg-btn bg40"></button>
-    <button data-ansi="41" class="bg-btn bg41"></button>
-    <button data-ansi="42" class="bg-btn bg42"></button>
-    <button data-ansi="43" class="bg-btn bg43"></button>
-    <button data-ansi="44" class="bg-btn bg44"></button>
-    <button data-ansi="45" class="bg-btn bg45"></button>
-    <button data-ansi="46" class="bg-btn bg46"></button>
-    <button data-ansi="47" class="bg-btn bg47"></button>
-  </div>
+        <h3>Background Color</h3>
+        <div class="color-row">
+            <button data-ansi="40" class="bg-btn bg40"></button>
+            <button data-ansi="41" class="bg-btn bg41"></button>
+            <button data-ansi="42" class="bg-btn bg42"></button>
+            <button data-ansi="43" class="bg-btn bg43"></button>
+            <button data-ansi="44" class="bg-btn bg44"></button>
+            <button data-ansi="45" class="bg-btn bg45"></button>
+            <button data-ansi="46" class="bg-btn bg46"></button>
+            <button data-ansi="47" class="bg-btn bg47"></button>
+        </div>
+    </div>
 
-  <div id="textarea" contenteditable="true">
-    여기에 <span class="ansi-1">굵게</span> <span class="ansi-4">밑줄</span> <span class="fg31">빨강</span> 텍스트를 테스트해보세요.
-  </div>
+    <div id="textarea" contenteditable="true">마우스로 드래그하여 색상을 입혀보세요.</div>
 
-  <button class="button copy">복사하기 (Discord ANSI 코드)</button>
+    <button class="button copy-btn">복사하기 (Discord ANSI 코드)</button>
+    
+    <footer>MAZE REST TOOLBOX</footer>
 </div>
 
 <script>
 const textarea = document.querySelector("#textarea");
-const copybtn = document.querySelector(".button.copy");
+const copybtn = document.querySelector(".copy-btn");
 
 document.querySelectorAll(".fg-btn, .bg-btn, .style-button").forEach(btn => {
-  btn.onclick = () => {
-    const sel = window.getSelection();
-    if (!sel.rangeCount) return;
-    const range = sel.getRangeAt(0);
-    const selectedText = sel.toString();
-    if (!selectedText) return;
+    btn.onclick = () => {
+        const sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        const range = sel.getRangeAt(0);
+        const selectedText = sel.toString();
+        if (!selectedText) return;
 
-    const span = document.createElement("span");
-    span.innerText = selectedText;
+        const span = document.createElement("span");
+        span.innerText = selectedText;
 
-    const ansi = parseInt(btn.dataset.ansi);
-    if (ansi === 1 || ansi === 4) span.classList.add(`ansi-${ansi}`);
-    else if (ansi >= 30 && ansi < 40) span.classList.add(`fg${ansi}`);
-    else if (ansi >= 40 && ansi < 50) span.classList.add(`bg${ansi}`);
+        const ansi = parseInt(btn.dataset.ansi);
+        
+        if (ansi === 0) {
+            // Reset logic
+            range.deleteContents();
+            range.insertNode(document.createTextNode(selectedText));
+            return;
+        }
 
-    range.deleteContents();
-    range.insertNode(span);
-  };
+        if (ansi === 1 || ansi === 4) span.classList.add(`ansi-${ansi}`);
+        else if (ansi >= 30 && ansi < 40) span.classList.add(`fg${ansi}`);
+        else if (ansi >= 40 && ansi < 50) span.classList.add(`bg${ansi}`);
+
+        range.deleteContents();
+        range.insertNode(span);
+    };
 });
 
 function nodesToANSI(nodes, states) {
-  let text = "";
-  for (const node of nodes) {
-    if (node.nodeType === 3) { text += node.textContent; continue; }
-    if (node.nodeName === "BR") { text += "\n"; continue; }
+    let text = "";
+    for (const node of nodes) {
+        if (node.nodeType === 3) { text += node.textContent; continue; }
+        if (node.nodeName === "BR") { text += "\n"; continue; }
 
-    const classes = node.className.split(" ");
-    const newState = { ...states.at(-1) };
+        const classes = node.className ? node.className.split(" ") : [];
+        const newState = { ...states.at(-1) };
 
-    for (const cls of classes) {
-      const code = parseInt(cls.replace(/\D/g, ""));
-      if (isNaN(code)) continue;
-      if (code === 1 || code === 4) newState.st = code;
-      else if (code >= 30 && code < 40) newState.fg = code;
-      else if (code >= 40 && code < 50) newState.bg = code;
+        for (const cls of classes) {
+            const code = parseInt(cls.replace(/\D/g, ""));
+            if (isNaN(code)) continue;
+            if (code === 1 || code === 4) newState.st = code;
+            else if (code >= 30 && code < 40) newState.fg = code;
+            else if (code >= 40 && code < 50) newState.bg = code;
+        }
+
+        text += `\x1b[${newState.st || 0};${newState.fg || 37}${newState.bg ? ";" + newState.bg : ""}m`;
+        text += nodesToANSI(node.childNodes, [...states, newState]);
+        text += `\x1b[0m`;
     }
-
-    text += `\x1b[${newState.st || 0};${newState.fg || 37}${newState.bg ? ";" + newState.bg : ""}m`;
-    text += nodesToANSI(node.childNodes, [...states, newState]);
-    text += `\x1b[0m`;
-  }
-  return text;
+    return text;
 }
 
 copybtn.onclick = () => {
-  const ansiText = "```ansi\n" + nodesToANSI(textarea.childNodes, [{}]) + "\n```";
-  navigator.clipboard.writeText(ansiText);
-  copybtn.innerText = "✅ 복사됨!";
-  setTimeout(() => (copybtn.innerText = "복사하기 (Discord ANSI 코드)"), 1500);
+    const ansiText = "```ansi\n" + nodesToANSI(textarea.childNodes, [{}]) + "\n```";
+    navigator.clipboard.writeText(ansiText);
+    const originalText = copybtn.innerText;
+    copybtn.innerText = "✅ COPIED!";
+    setTimeout(() => (copybtn.innerText = originalText), 1500);
 };
 </script>
 </body>
