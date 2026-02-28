@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title> :smoking:  비흡연자의 쉬는시간</title>
+    <title> 비흡연자의 쉬는시간</title>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -25,7 +25,7 @@
             display: flex; height: 100vh; overflow: hidden; 
         }
 
-        /* 🚪 사이드바 (데스크톱) */
+        /* 🚪 사이드바 (PC) */
         .sidebar { 
             width: 240px; 
             background: var(--sidebar-bg); 
@@ -34,7 +34,6 @@
             flex-direction: column; 
             padding: 30px 15px; 
             flex-shrink: 0; 
-            transition: 0.3s;
         }
 
         .sidebar-title { 
@@ -76,11 +75,19 @@
             box-shadow: 0 4px 20px rgba(255, 149, 0, 0.25); 
         }
 
+        /* 👣 푸터 (방문자 배지) */
         .sidebar-footer {
             margin-top: auto;
             padding-top: 20px;
             text-align: center;
             border-top: 1px solid var(--border-color);
+        }
+
+        .sidebar-footer p {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 10px;
+            opacity: 0.6;
         }
 
         /* 🖼 콘텐츠 영역 */
@@ -101,20 +108,19 @@
             margin-bottom: 25px; 
         }
 
-        h2 { margin-top: 0; font-size: 1.4rem; color: #ffd447; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        h2::before { content: ''; width: 4px; height: 20px; background: var(--accent-gold); border-radius: 10px; }
+        h2 { margin-top: 0; font-size: 1.6rem; color: #ffd447; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        h2::before { content: ''; width: 4px; height: 24px; background: var(--accent-gold); border-radius: 10px; }
 
         .frame-wrapper { 
             width: 100%; background: #000; 
             border-radius: 15px; overflow: hidden; 
-            border: 1px solid #333; position: relative;
+            border: 1px solid #333; 
         }
-        .full-iframe { width: 100%; border: none; background: #000; display: block; height: 100%; }
+        .full-iframe { width: 100%; border: none; background: #000; display: block; }
 
-        /* 📱 모바일 대응 (화면 너비 768px 이하) */
+        /* 📱 모바일 대응 (768px 이하) */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-
             .sidebar {
                 width: 100%;
                 height: auto;
@@ -122,43 +128,31 @@
                 border-right: none;
                 border-bottom: 1px solid var(--border-color);
             }
-
-            .sidebar-title { margin-bottom: 15px; font-size: 1rem; }
-
+            .sidebar-title { margin-bottom: 15px; }
             .nav-menu {
                 flex-direction: row;
-                overflow-x: auto; /* 가로 스크롤 가능하게 */
-                padding-bottom: 10px;
+                overflow-x: auto;
                 gap: 8px;
-                -webkit-overflow-scrolling: touch;
+                padding-bottom: 5px;
             }
-
-            .nav-menu::-webkit-scrollbar { display: none; } /* 스크롤바 숨김 */
-
-            .sidebar button {
-                padding: 10px 15px;
-                font-size: 13px;
-                flex-shrink: 0;
-            }
-
-            .sidebar-footer { display: none; } /* 모바일에서 공간 확보를 위해 푸터 숨김 */
-
+            .nav-menu::-webkit-scrollbar { display: none; }
+            .sidebar button { padding: 10px 15px; font-size: 13px; }
+            .sidebar-footer { display: none; } /* 모바일은 배지 숨김 (공간 확보) */
             .content { padding: 20px; }
-            
-            h2 { font-size: 1.2rem; }
+            h2 { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 
     <nav class="sidebar">
-        <div class="sidebar-title">쉬는시간</div>
+        <div class="sidebar-title">쉬는시간 </div>
         
         <div class="nav-menu">
             <button id="tabHome" class="active">🏠 홈</button>
-            <button id="tabAnsi">🎨 텍스트</button>
-            <button id="tabExp">📘 경험치</button>
-            <button id="tabCalc">🔥 환각</button>
+            <button id="tabAnsi">🎨 텍스트 효과</button>
+            <button id="tabExp">📘 경험치 계산기 </button>
+            <button id="tabCalc">🔥 환각 계산기</button>
             <button id="tabOmok">⭕ 오목</button>
         </div>
 
@@ -166,9 +160,7 @@
             <a href="https://hits.sh/storazi.github.io/cigar/">
                 <img alt="Hits" src="https://hits.sh/storazi.github.io/cigar.svg?view=today-total&style=flat-square&label=VISITORS&color=ff9500&labelColor=222222"/>
             </a>
-            <p style="font-size: 11px; color: var(--text-dim); margin-top:10px; opacity:0.6;">
-                © 2026 sup_bot
-            </p>
+            <p>© 2026 sup_bot All rights reserved.</p>
         </footer>
     </nav>
 
@@ -176,77 +168,97 @@
         <section id="homeTab" class="tab-content active">
             <div class="card">
                 <h2>비흡연자의 쉬는시간</h2>
-                <p style="color:var(--text-dim); line-height: 1.6; font-size: 14px;">이 사이트는 시가 부족원을 위해 만들어졌습니다.</p>
+                <p style="color:var(--text-dim); line-height: 1.6;">이 사이트는 시가 부족원을 위해 만들어졌습니다.</p>
             </div>
         </section>
 
         <section id="ansiTab" class="tab-content">
-            <h2>디스코드 텍스트</h2>
-            <div class="frame-wrapper">
-                <iframe src="./ansi.html" class="full-iframe"></iframe>
-            </div>
+            <h2>디스코드 텍스트 생성기</h2>
+            <div class="frame-wrapper"><iframe src="./ansi.html" class="full-iframe"></iframe></div>
         </section>
 
         <section id="expTab" class="tab-content">
             <h2>경험치 계산기</h2>
-            <div class="frame-wrapper">
-                <iframe src="./exp.html" class="full-iframe"></iframe>
-            </div>
+            <div class="frame-wrapper"><iframe src="./exp.html" class="full-iframe"></iframe></div>
         </section>
 
         <section id="calcTab" class="tab-content">
             <h2>환각 계산기</h2>
-            <div class="frame-wrapper">
-                <iframe src="./rebirth.html" class="full-iframe"></iframe>
-            </div>
+            <div class="frame-wrapper"><iframe src="./rebirth.html" class="full-iframe"></iframe></div>
         </section>
 
         <section id="omokTab" class="tab-content">
             <h2>오목 AI</h2>
-            <div class="frame-wrapper">
-                <iframe src="./omok.html" id="omokFrame" class="full-iframe"></iframe>
-            </div>
+            <div class="frame-wrapper"><iframe src="./omok.html" class="full-iframe"></iframe></div>
         </section>
     </main>
 
     <script>
-        const tabs = {
-            tabHome: "homeTab",
-            tabAnsi: "ansiTab",
-            tabExp: "expTab",
-            tabCalc: "calcTab",
-            tabOmok: "omokTab"
+        // 도구별 파일 경로 매핑
+        const config = {
+            tabAnsi: "./ansi.html",
+            tabExp: "./exp.html",
+            tabCalc: "./rebirth.html",
+            tabOmok: "./omok.html"
         };
 
+        // 모바일 여부 판별 (너비 기준 또는 터치 기기 기준)
+        function isMobile() {
+            return window.innerWidth <= 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
+        }
+
+        // iframe 높이 조절 (PC 전용)
         function adjustFrameHeight() {
             const activeTab = document.querySelector(".tab-content.active");
-            const iframe = activeTab.querySelector("iframe");
+            const iframe = activeTab?.querySelector("iframe");
             if (iframe) {
                 const vh = window.innerHeight;
                 const rect = iframe.getBoundingClientRect();
-                // 화면 하단에서 여유공간 20px 확보
                 iframe.style.height = (vh - rect.top - 20) + "px";
             }
         }
 
-        Object.keys(tabs).forEach(key => {
-            document.getElementById(key).addEventListener("click", function() {
-                document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
-                document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
-                this.classList.add("active");
-                document.getElementById(tabs[key]).classList.add("active");
-                
-                // 탭 전환 후 높이 재조정
-                setTimeout(adjustFrameHeight, 100);
+        // 버튼 클릭 이벤트 통합 관리
+        document.querySelectorAll(".sidebar button").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const id = this.id;
+
+                // 1. 홈 탭 처리 (모바일/PC 공통)
+                if (id === 'tabHome') {
+                    switchTab(id, 'homeTab');
+                    return;
+                }
+
+                // 2. 모바일인 경우 새 창으로 열기
+                if (isMobile()) {
+                    window.open(config[id], '_blank');
+                } 
+                // 3. PC인 경우 내부 탭 전환
+                else {
+                    const targetSectionId = id.replace('tab', '').toLowerCase() + 'Tab';
+                    switchTab(id, targetSectionId);
+                }
             });
         });
 
-        // 윈도우 크기 변경 시 높이 자동 조절
-        window.addEventListener("resize", adjustFrameHeight);
+        // 탭 전환 로직
+        function switchTab(btnId, sectionId) {
+            document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+            
+            document.getElementById(btnId).classList.add("active");
+            document.getElementById(sectionId).classList.add("active");
+            
+            if (!isMobile()) setTimeout(adjustFrameHeight, 50);
+        }
+
+        window.addEventListener("resize", () => {
+            if (!isMobile()) adjustFrameHeight();
+        });
+
         window.onload = () => {
-            setTimeout(adjustFrameHeight, 200);
+            if (!isMobile()) setTimeout(adjustFrameHeight, 100);
         };
     </script>
 </body>
 </html>
-
