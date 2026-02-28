@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>맹독 데미지 계산기</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #161616;
+            --accent-gold: linear-gradient(135deg, #ffd447 0%, #ff9500 100%);
+            --text-main: #e0e0e0;
+            --text-dim: #999999;
+            --border-color: #222222;
+            --input-bg: #111111;
+        }
+
+        * { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        body { 
+            margin: 0; padding: 20px; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            font-family: 'Pretendard', -apple-system, sans-serif; 
+        }
+
+        .container { max-width: 600px; margin: 0 auto; }
+
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 20px; 
+            padding: 25px; 
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        h2 { 
+            margin: some; font-size: 1.4rem; color: #ffd447; 
+            display: flex; align-items: center; gap: 10px; margin-bottom: 20px; 
+        }
+        h2::before { content: ''; width: 4px; height: 20px; background: var(--accent-gold); border-radius: 10px; }
+
+        textarea { 
+            width: 100%; height: 100px; background: var(--input-bg);
+            border: 1px solid var(--border-color); border-radius: 12px;
+            color: var(--text-main); padding: 15px; font-size: 13px;
+            resize: none; outline: none; transition: 0.3s;
+        }
+        textarea:focus { border-color: #ff9500; }
+
+        .btn-main { 
+            width: 100%; margin-top: 15px; padding: 14px;
+            background: var(--accent-gold); border: none; border-radius: 12px;
+            color: #000; font-weight: 700; cursor: pointer;
+            transition: 0.3s; font-size: 15px;
+        }
+        .btn-main:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3); }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 10px; margin-bottom: 12px; }
+        .stat-header { font-size: 11px; color: var(--text-dim); text-align: center; margin-bottom: 5px; font-weight: 600; }
+        
+        .label-box { 
+            background: #1a1a1a; text-align: center; font-weight: 700; 
+            height: 40px; line-height: 40px; border-radius: 10px; 
+            border: 1px solid var(--border-color); color: #ffd447; font-size: 13px;
+        }
+
+        input { 
+            background: var(--input-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; color: #fff; text-align: center;
+            font-weight: 600; font-size: 15px; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: #ffd447; background: #161616; }
+
+        .result-box { 
+            margin-top: 10px; padding: 30px; border: 1px dashed #ffd447; 
+            border-radius: 20px; background: rgba(255, 212, 71, 0.03); 
+            display: none; text-align: center; 
+        }
+        .res-title { font-weight: 700; color: #ffd447; font-size: 1.1rem; margin-bottom: 10px; }
+        .res-val { font-size: 64px; font-weight: 900; background: var(--accent-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>데이터 입력</h2>
+        <textarea id="rawInput" placeholder="홈페이지 페트 정보를 붙여넣으세요."></textarea>
+        <button class="btn-main" onclick="extractData()">표기 초기치 자동 추출</button>
+    </div>
+
+    <div class="card">
+        <h2>수치 확인 및 계산</h2>
+        <div class="stat-grid">
+            <div class="stat-header">스탯</div>
+            <div class="stat-header">표기 초기치</div>
+            <div class="stat-header">S급 성장률</div>
+        </div>
+        <div class="stat-grid"><div class="label-box">체력(내구)</div><input type="text" id="v_init"><input type="text" id="v_grow"></div>
+        <div class="stat-grid"><div class="label-box">공격력</div><input type="text" id="s_init"><input type="text" id="s_grow"></div>
+        <div class="stat-grid"><div class="label-box">방어력</div><input type="text" id="t_init"><input type="text" id="t_grow"></div>
+        <div class="stat-grid"><div class="label-box">순발력</div><input type="text" id="d_init"><input type="text" id="d_grow"></div>
+        
+        <button class="btn-main" style="background: #e0e0e0; color: #000; margin-top: 25px;" onclick="calculatePoison()">데미지 계산하기</button>
+
+        <div id="resultBox" class="result-box">
+            <div class="res-title">최종 데미지</div>
+            <div class="res-val" id="dmgVal">-</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function extractData() {
+        const text = document.getElementById('rawInput').value.trim();
+        const decimals = text.match(/\d+\.\d+/g);
+
+        if (!decimals || decimals.length < 8) {
+            alert("정확한 데이터를 입력해주세요.");
+            return;
+        }
+
+        document.getElementById('v_init').value = decimals[0];
+        document.getElementById('v_grow').value = decimals[2];
+        document.getElementById('s_init').value = decimals[3];
+        document.getElementById('s_grow').value = decimals[5];
+        document.getElementById('t_init').value = decimals[6];
+        document.getElementById('t_grow').value = decimals[8];
+        document.getElementById('d_init').value = decimals[9];
+        document.getElementById('d_grow').value = decimals[11];
+    }
+
+    function calculatePoison() {
+        const d_V = parseFloat(document.getElementById('v_init').value) || 0;
+        const d_S = parseFloat(document.getElementById('s_init').value) || 0;
+        const d_T = parseFloat(document.getElementById('t_init').value) || 0;
+        const d_D = parseFloat(document.getElementById('d_init').value) || 0;
+
+        if (d_V === 0) return;
+
+        const pure_D = d_D; 
+        const real_V = (d_V - d_S - d_T + (pure_D * 1.05)) / 3.8;
+        const raw_V = Math.round(real_V * 100);
+        const raw_S = Math.round((d_S - real_V * 0.1 - (d_T - real_V * 0.1 - (d_S - real_V * 0.1) * 0.1) * 0.1 - pure_D * 0.05) * 100);
+        const raw_T = Math.round((d_T - real_V * 0.1 - (d_S - real_V * 0.1) * 0.1 - pure_D * 0.05) * 100);
+        const raw_D = Math.round(pure_D * 100);
+
+        const down = raw_V + raw_S + raw_T + raw_D;
+        let result = ( (down / 100) - 20 ) / 4;
+        let finalDmg = Math.floor(result);
+        if (finalDmg < 1) finalDmg = 1;
+
+        document.getElementById('resultBox').style.display = 'block';
+        document.getElementById('dmgVal').innerText = finalDmg;
+    }
+</script>
+
+</body>
+</html>
