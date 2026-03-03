@@ -294,7 +294,8 @@
     "헤머드":{ "initialCoefficient": 25, "healthCoefficient": 30, "attackCoefficient": 34, "defenseCoefficient": 19, "agilityCoefficient": 22 },
     "쿠로로":{ "initialCoefficient": 23, "healthCoefficient": 30, "attackCoefficient": 27, "defenseCoefficient": 17, "agilityCoefficient": 29 },
     "피오":{ "initialCoefficient": 22, "healthCoefficient": 27, "attackCoefficient": 31, "defenseCoefficient": 41, "agilityCoefficient": 5 },
-    "티오":{ "initialCoefficient": 22, "healthCoefficient": 27, "attackCoefficient": 27, "defenseCoefficient": 45, "agilityCoefficient": 5 }
+    "티오":{ "initialCoefficient": 22, "healthCoefficient": 27, "attackCoefficient": 27, "defenseCoefficient": 45, "agilityCoefficient": 5 },
+    "데블로스":{ "initialCoefficient": 23, "healthCoefficient": 20, "attackCoefficient": 31, "defenseCoefficient": 11, "agilityCoefficient": 27 }
 
 
 
@@ -303,6 +304,7 @@
 
 
 }
+
 
 
 
