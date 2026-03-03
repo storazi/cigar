@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title> 비흡연자의 쉬는시간</title>
+    <title>비흡연자의 쉬는시간</title>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -146,14 +146,15 @@
 <body>
 
     <nav class="sidebar">
-        <div class="sidebar-title">쉬는시간 </div>
+        <div class="sidebar-title">쉬는시간</div>
         
         <div class="nav-menu">
             <button id="tabHome" class="active">🏠 홈</button>
             <button id="tabAnsi">🎨 텍스트 효과</button>
-            <button id="tabExp">📘 경험치 계산기 </button>
+            <button id="tabExp">📘 경험치 계산기</button>
             <button id="tabCalc">🔥 환각 계산기</button>
             <button id="tabPoison">🧪 맹독 계산기</button>
+            <button id="tabCompare">🐾 페트 비교</button>
             <button id="tabOmok">⭕ 오목</button>
         </div>
 
@@ -193,6 +194,11 @@
             <div class="frame-wrapper"><iframe src="./poison.html" class="full-iframe"></iframe></div>
         </section>
 
+        <section id="compareTab" class="tab-content">
+            <h2>페트 능력치 비교</h2>
+            <div class="frame-wrapper"><iframe src="./compare.html" class="full-iframe"></iframe></div>
+        </section>
+
         <section id="omokTab" class="tab-content">
             <h2>오목 AI</h2>
             <div class="frame-wrapper"><iframe src="./omok.html" class="full-iframe"></iframe></div>
@@ -206,6 +212,7 @@
             tabExp: "./exp.html",
             tabCalc: "./rebirth.html",
             tabPoison: "./poison.html",
+            tabCompare: "./compare.html",
             tabOmok: "./omok.html"
         };
 
@@ -221,6 +228,7 @@
             if (iframe) {
                 const vh = window.innerHeight;
                 const rect = iframe.getBoundingClientRect();
+                // 화면 하단 여백을 위해 20px 정도 제외
                 iframe.style.height = (vh - rect.top - 20) + "px";
             }
         }
@@ -235,11 +243,13 @@
                     return;
                 }
 
+                // 모바일 환경에서는 새 탭으로 열기
                 if (isMobile()) {
                     window.open(config[id], '_blank');
                 } 
                 else {
-                    const targetSectionId = id.replace('tab', '').toLowerCase() + 'Tab';
+                    // ID 규칙에 맞춰 섹션 ID 생성 (예: tabCompare -> compareTab)
+                    const targetSectionId = id.replace('tab', '').charAt(0).toLowerCase() + id.replace('tab', '').slice(1) + 'Tab';
                     switchTab(id, targetSectionId);
                 }
             });
@@ -247,12 +257,18 @@
 
         // 탭 전환 로직
         function switchTab(btnId, sectionId) {
+            // 모든 버튼과 섹션 비활성화
             document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
             document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
             
-            document.getElementById(btnId).classList.add("active");
-            document.getElementById(sectionId).classList.add("active");
+            // 선택한 탭 활성화
+            const activeBtn = document.getElementById(btnId);
+            const activeSection = document.getElementById(sectionId);
             
+            if (activeBtn) activeBtn.classList.add("active");
+            if (activeSection) activeSection.classList.add("active");
+            
+            // iframe 높이 재계산
             if (!isMobile()) setTimeout(adjustFrameHeight, 50);
         }
 
