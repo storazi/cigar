@@ -18,7 +18,7 @@
             font-family: 'Pretendard', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0; padding: 10px; font-size: 14px;
+            margin: 0; padding: 10px; font-size: 13px;
         }
 
         .container { max-width: 100%; margin: auto; }
@@ -37,7 +37,7 @@
         .input-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px; }
         input {
             background: #000; border: 1px solid var(--border-color);
-            color: #fff; padding: 10px; border-radius: 8px; outline: none;
+            color: #fff; padding: 10px; border-radius: 8px; outline: none; width: 130px;
         }
         input:focus { border-color: #ffd447; }
 
@@ -45,19 +45,30 @@
             overflow-x: auto; border-radius: 10px; 
             border: 1px solid var(--border-color); background: #000;
         }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
         th { 
             background: var(--table-header); color: #ffd447; 
             padding: 12px; border-bottom: 2px solid var(--border-color);
+            font-size: 0.9em;
         }
-        td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border-color); line-height: 1.4; }
+
+        /* 초기치/성장률 구분 스타일 */
+        .val-init { display: block; font-size: 11px; color: #777; }
+        .val-growth { display: block; font-size: 14px; font-weight: 600; }
 
         .badge { padding: 3px 8px; border-radius: 4px; color: white; font-weight: bold; font-size: 11px; display: inline-block; }
         .지 { background-color: #2ecc71; } .수 { background-color: #3498db; }
         .풍 { background-color: #f1c40f; color: #000; } .화 { background-color: #e74c3c; }
 
-        .total-col { color: #ffd447; font-weight: bold; background: rgba(255, 212, 71, 0.05); }
+        .total-col { color: #ffd447; font-weight: bold; background: rgba(255, 212, 71, 0.05); border-left: 1px solid var(--border-color); }
         #loading { color: #ffd447; text-align: center; padding: 20px; font-weight: bold; }
+        
+        .btn-comp {
+            background: var(--accent-gold); border: none; padding: 10px 20px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .btn-comp:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -71,29 +82,35 @@
             <input type="text" class="comp-name" placeholder="펫 이름 1" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <input type="text" class="comp-name" placeholder="펫 이름 2" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <input type="text" class="comp-name" placeholder="펫 이름 3" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <button onclick="comparePets()" style="background:var(--accent-gold); border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer;">비교하기</button>
+            <button class="btn-comp" onclick="comparePets()">비교하기</button>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>이름</th><th>속성</th><th>성장 체력</th><th>성장 공격</th><th>성장 방어</th><th>성장 순발</th>
-                        <th style="color:#ff9500">합계(공방순)</th>
+                        <th>이름</th><th>속성</th>
+                        <th>체력<br><small>(초기/성장)</small></th>
+                        <th>공격력<br><small>(초기/성장)</small></th>
+                        <th>방어력<br><small>(초기/성장)</small></th>
+                        <th>순발력<br><small>(초기/성장)</small></th>
+                        <th class="total-col">성장 합계<br><small>(공+방+순)</small></th>
                     </tr>
                 </thead>
-                <tbody id="compareBody"></tbody>
+                <tbody id="compareBody">
+                    <tr><td colspan="7" style="padding:40px; color:var(--text-dim);">이름을 입력하고 비교하기를 눌러주세요.</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-title">🔍 전체 펫 목록 (성장률 기준)</div>
+        <div class="section-title">🔍 전체 펫 도감</div>
         <div class="table-container" style="max-height: 500px;">
             <table>
                 <thead>
                     <tr>
                         <th>#</th><th>이름</th><th>속성1</th><th>속성2</th>
-                        <th>성장 체</th><th>성장 공</th><th>성장 방</th><th>성장 순</th>
+                        <th>체력 (초기/성장)</th><th>공격 (초기/성장)</th><th>방어 (초기/성장)</th><th>순발 (초기/성장)</th>
                     </tr>
                 </thead>
                 <tbody id="mainBody"></tbody>
@@ -113,13 +130,20 @@
             document.getElementById('loading').style.display = 'none';
             renderMainTable(allData);
         } catch (e) {
-            document.getElementById('loading').innerText = '❌ 로드 실패';
+            document.getElementById('loading').innerText = '❌ 데이터 로드 실패';
         }
     }
 
-    // 배열 내 1번 인덱스(성장률)를 가져오는 함수
-    function getGrowth(val) {
-        return Array.isArray(val) ? val[1] : val;
+    // 데이터를 초기치와 성장률로 나누어 HTML로 반환하는 함수
+    function formatStat(val, isHighlight = false) {
+        if (!Array.isArray(val)) return `<span>${val}</span>`;
+        const init = val[0];
+        const growth = val[1];
+        const colorStyle = isHighlight ? 'color:#ff9500;' : '';
+        return `
+            <span class="val-init">${init}</span>
+            <span class="val-growth" style="${colorStyle}">${growth}</span>
+        `;
     }
 
     function renderMainTable(data) {
@@ -130,10 +154,10 @@
                 <td><strong>${item.이름}</strong></td>
                 <td><span class="badge ${item.속성1[0]}">${item.속성1}</span></td>
                 <td>${item.속성2 ? `<span class="badge ${item.속성2[0]}">${item.속성2}</span>` : '-'}</td>
-                <td>${getGrowth(item.체력)}</td>
-                <td style="color:#ff9500; font-weight:bold;">${getGrowth(item.공격력)}</td>
-                <td>${getGrowth(item.방어력)}</td>
-                <td>${getGrowth(item.순발력)}</td>
+                <td>${formatStat(item.체력)}</td>
+                <td>${formatStat(item.공격력, true)}</td>
+                <td>${formatStat(item.방어력)}</td>
+                <td>${formatStat(item.순발력)}</td>
             </tr>`).join('');
     }
 
@@ -144,25 +168,25 @@
         const tbody = document.getElementById('compareBody');
         
         if (rows.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-dim)">데이터가 없습니다.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-dim); padding:30px;">일치하는 펫이 없습니다.</td></tr>';
             return;
         }
 
         tbody.innerHTML = rows.map(item => {
-            const atk = parseFloat(getGrowth(item.공격력)) || 0;
-            const def = parseFloat(getGrowth(item.방어력)) || 0;
-            const spd = parseFloat(getGrowth(item.순발력)) || 0;
-            const total = (atk + def + spd).toFixed(3);
+            const atkG = item.공격력[1] || 0;
+            const defG = item.방어력[1] || 0;
+            const spdG = item.순발력[1] || 0;
+            const total = (atkG + defG + spdG).toFixed(3);
             
             return `
                 <tr>
                     <td><strong>${item.이름}</strong></td>
                     <td><span class="badge ${item.속성1[0]}">${item.속성1}</span></td>
-                    <td>${getGrowth(item.체력)}</td>
-                    <td>${atk}</td>
-                    <td>${def}</td>
-                    <td>${spd}</td>
-                    <td class="total-col">${total}</td>
+                    <td>${formatStat(item.체력)}</td>
+                    <td>${formatStat(item.공격력)}</td>
+                    <td>${formatStat(item.방어력)}</td>
+                    <td>${formatStat(item.순발력)}</td>
+                    <td class="total-col" style="font-size:18px;">${total}</td>
                 </tr>`;
         }).join('');
     }
@@ -171,4 +195,3 @@
 </script>
 </body>
 </html>
-
