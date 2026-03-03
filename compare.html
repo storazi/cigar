@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>펫 마스터 - GitHub 데이터 연동판</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f8f9fa; }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg); margin: 20px; font-size: 14px; color: #333; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        
+        .section { margin-bottom: 35px; padding: 20px; border: 1px solid #eee; border-radius: 12px; }
+        .section-title { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .info-text { font-size: 0.85em; color: #e74c3c; margin-bottom: 10px; font-weight: bold; }
+
+        .input-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 15px; }
+        input, select { padding: 9px; border: 1px solid #ddd; border-radius: 6px; }
+        .comp-input { width: 130px; border: 2px solid var(--accent); font-weight: bold; }
+
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid #eee; max-height: 500px; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th { background: var(--primary); color: white; padding: 12px; cursor: pointer; position: sticky; top: 0; z-index: 5; }
+        td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
+        
+        /* 속성 뱃지 */
+        .badge { padding: 3px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 11px; display: inline-block; }
+        .지 { background-color: #2ecc71; } .수 { background-color: #3498db; }
+        .풍 { background-color: #f1c40f; color: #333; } .화 { background-color: #e74c3c; }
+
+        /* 비교 섹션 */
+        .compare-table { border: 2px solid var(--accent); }
+        .compare-table th { background: var(--accent); }
+        .total-col { background: #fef9e7; font-weight: bold; color: #d35400; font-size: 1.1em; }
+        .btn { padding: 10px 24px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
+        #loading { font-weight: bold; color: var(--accent); margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center;">🦖 펫 성장률 분석 대시보드 (GitHub 연동)</h2>
+
+    <div id="loading">데이터를 불러오는 중...</div>
+
+    <div class="section">
+        <div class="section-title">⚖️ 성장률 집중 비교 (최대 5마리)</div>
+        <div class="info-text">* 총합 = (성장 공격 + 성장 방어 + 성장 순발) / 체력 제외</div>
+        <div class="input-row">
+            <input type="text" class="comp-name" placeholder="펫 이름 1" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 2" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 3" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 4" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 5" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <button class="btn" onclick="comparePets()">비교하기</button>
+        </div>
+        <div class="table-container">
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>이름</th><th>속성</th><th>성장 체력</th><th>성장 공격</th><th>성장 방어</th><th>성장 순발</th>
+                        <th class="total-col">합계(공방순)</th>
+                    </tr>
+                </thead>
+                <tbody id="compareBody">
+                    <tr><td colspan="7" style="padding:30px; color:#999;">이름을 입력하고 비교하기를 눌러주세요.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🔍 데이터 필터링</div>
+        <div class="input-row">
+            <input type="text" id="nameFilter" placeholder="이름 검색..." oninput="applyFilters()">
+            <select id="statType" onchange="applyFilters()">
+                <option value="성장공격력">성장 공격</option>
+                <option value="성장방어력">성장 방어</option>
+                <option value="성장순발력">성장 순발</option>
+                <option value="성장체력">성장 체력</option>
+            </select>
+            <input type="number" id="statMin" placeholder="0" step="0.1" style="width:70px" oninput="applyFilters()"> <span>이상</span>
+            
+            <select id="attrType" onchange="applyFilters()" style="margin-left: 15px;">
+                <option value="none">속성 선택</option>
+                <option value="지">지</option><option value="수">수</option>
+                <option value="화">화</option><option value="풍">풍</option>
+            </select>
+            <input type="number" id="attrMin" placeholder="0" style="width:50px" oninput="applyFilters()"> <span>이상</span>
+        </div>
+        
+        <div class="table-container">
+            <table id="mainTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('번호')">번호</th>
+                        <th onclick="sortTable('이름')">이름</th>
+                        <th>속성1</th><th>속성2</th>
+                        <th onclick="sortTable('성장체력')">성장 체</th>
+                        <th onclick="sortTable('성장공격력')">성장 공</th>
+                        <th onclick="sortTable('성장방어력')">성장 방</th>
+                        <th onclick="sortTable('성장순발력')">성장 순</th>
+                    </tr>
+                </thead>
+                <tbody id="mainBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ⚠️ 중요: 본인의 GitHub Raw JSON URL을 여기에 넣으세요!
+    const JSON_URL = 'https://raw.githubusercontent.com/사용자이름/저장소이름/main/petdata.json';
+    
+    let allData = [];
+    let sortDirection = true;
+
+    // 1. 데이터 로드 (JSON fetch)
+    async function loadData() {
+        try {
+            const response = await fetch(JSON_URL);
+            allData = await response.json();
+            document.getElementById('loading').style.display = 'none';
+            applyFilters();
+        } catch (error) {
+            document.getElementById('loading').innerText = '데이터 로드 실패. URL을 확인하세요.';
+            console.error(error);
+        }
+    }
+
+    // 2. 필터링 로직
+    function applyFilters() {
+        const nameQuery = document.getElementById('nameFilter').value.toLowerCase();
+        const statKey = document.getElementById('statType').value;
+        const statMin = parseFloat(document.getElementById('statMin').value) || 0;
+        const targetAttr = document.getElementById('attrType').value;
+        const attrMin = parseInt(document.getElementById('attrMin').value) || 0;
+
+        const filtered = allData.filter(item => {
+            const nameMatch = item["이름"].toLowerCase().includes(nameQuery);
+            const statValue = parseFloat(item[statKey]) || 0;
+            const statMatch = statValue >= statMin;
+            
+            let attrMatch = true;
+            if (targetAttr !== "none") {
+                attrMatch = false;
+                ["속성1", "속성2"].forEach(key => {
+                    const attrStr = item[key];
+                    if (attrStr && attrStr.startsWith(targetAttr)) {
+                        const val = parseInt(attrStr.replace(targetAttr, "")) || 0;
+                        if (val >= attrMin) attrMatch = true;
+                    }
+                });
+            }
+            return nameMatch && statMatch && attrMatch;
+        });
+        renderMainTable(filtered);
+    }
+
+    // 3. 메인 테이블 출력
+    function renderMainTable(data) {
+        const tbody = document.getElementById('mainBody');
+        tbody.innerHTML = data.map(item => `
+            <tr>
+                <td>${item["번호"]}</td>
+                <td><strong>${item["이름"]}</strong></td>
+                <td><span class="badge ${item["속성1"][0]}">${item["속성1"]}</span></td>
+                <td>${item["속성2"] ? `<span class="badge ${item["속성2"][0]}">${item["속성2"]}</span>` : '-'}</td>
+                <td>${item["성장체력"]}</td>
+                <td style="color:#d35400; font-weight:bold;">${item["성장공격력"]}</td>
+                <td>${item["성장방어력"]}</td>
+                <td>${item["성장순발력"]}</td>
+            </tr>
+        `).join('');
+    }
+
+    // 4. 비교 기능 (체력 제외 합계)
+    function comparePets() {
+        const inputs = document.querySelectorAll('.comp-name');
+        const searchNames = Array.from(inputs).map(i => i.value.trim()).filter(v => v !== "");
+        const compareRows = allData.filter(item => searchNames.includes(item["이름"]));
+        const tbody = document.getElementById('compareBody');
+        
+        if (compareRows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7">펫 이름을 입력하세요.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = compareRows.map(item => {
+            const atk = parseFloat(item["성장공격력"]) || 0;
+            const def = parseFloat(item["성장방어력"]) || 0;
+            const spd = parseFloat(item["성장순발력"]) || 0;
+            const total = (atk + def + spd).toFixed(3);
+
+            return `
+                <tr>
+                    <td><strong>${item["이름"]}</strong></td>
+                    <td><span class="badge ${item["속성1"][0]}">${item["속성1"]}</span> ${item["속성2"] ? `<span class="badge ${item["속성2"][0]}">${item["속성2"]}</span>` : ''}</td>
+                    <td>${item["성장체력"]}</td><td>${item["성장공격력"]}</td><td>${item["성장방어력"]}</td><td>${item["성장순발력"]}</td>
+                    <td class="total-col">${total}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 5. 정렬 기능
+    function sortTable(key) {
+        sortDirection = !sortDirection;
+        allData.sort((a, b) => {
+            let v1 = isNaN(a[key]) ? a[key] : parseFloat(a[key]);
+            let v2 = isNaN(b[key]) ? b[key] : parseFloat(b[key]);
+            return sortDirection ? (v1 > v2 ? 1 : -1) : (v1 < v2 ? 1 : -1);
+        });
+        applyFilters();
+    }
+
+    // 초기 실행
+    loadData();
+</script>
+</body>
+</html>
