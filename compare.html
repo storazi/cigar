@@ -34,26 +34,15 @@
             color: #ffd447; display: flex; align-items: center; gap: 8px;
         }
 
-        /* 5개 입력창을 위한 그리드 레이아웃 */
-        .input-row { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-            gap: 10px; 
-            margin-bottom: 15px; 
-        }
+        /* 컨트롤 영역 (필터/검색) */
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; width: 100%; margin-bottom: 10px; }
         
-        input {
+        input, select {
             background: #000; border: 1px solid var(--border-color);
-            color: #fff; padding: 10px; border-radius: 8px; outline: none;
-            width: 100%;
+            color: #fff; padding: 8px 12px; border-radius: 8px; outline: none;
         }
-        input:focus { border-color: #ffd447; box-shadow: 0 0 5px rgba(255, 212, 71, 0.2); }
-
-        .btn-comp {
-            background: var(--accent-gold); border: none; padding: 10px; 
-            border-radius: 8px; font-weight: bold; cursor: pointer;
-            grid-column: span 1;
-        }
+        input:focus, select:focus { border-color: #ffd447; }
 
         .table-container { 
             overflow-x: auto; border-radius: 10px; 
@@ -63,8 +52,9 @@
         th { 
             background: var(--table-header); color: #ffd447; 
             padding: 12px; border-bottom: 2px solid var(--border-color);
-            font-size: 0.9em;
+            font-size: 0.9em; cursor: pointer; transition: 0.2s;
         }
+        th:hover { background: #252525; }
         td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border-color); }
 
         .val-init { display: block; font-size: 11px; color: #777; }
@@ -74,13 +64,12 @@
         .지 { background-color: #2ecc71; } .수 { background-color: #3498db; }
         .풍 { background-color: #f1c40f; color: #000; } .화 { background-color: #e74c3c; }
 
-        .total-col { color: #ffd447; font-weight: bold; background: rgba(255, 212, 71, 0.05); border-left: 1px solid var(--border-color); }
+        .total-col { color: #ffd447; font-weight: bold; background: rgba(255, 212, 71, 0.05); }
         #loading { color: #ffd447; text-align: center; padding: 20px; font-weight: bold; }
-
-        /* 모바일 대응 */
-        @media (max-width: 600px) {
-            .input-row { grid-template-columns: repeat(2, 1fr); }
-            .btn-comp { grid-column: span 2; }
+        
+        .btn-comp {
+            background: var(--accent-gold); border: none; padding: 10px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
@@ -90,13 +79,13 @@
     <div id="loading">✨ 부족 데이터 동기화 중...</div>
 
     <div class="section">
-        <div class="section-title">⚖️ 성장률 집중 비교 (최대 5마리)</div>
+        <div class="section-title">⚖️ 성장률 집중 비교 (5마리)</div>
         <div class="input-row">
             <input type="text" class="comp-name" placeholder="펫 이름 1" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <input type="text" class="comp-name" placeholder="펫 이름 2" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <input type="text" class="comp-name" placeholder="펫 이름 3" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <input type="text" class="comp-name" placeholder="펫 이름 4" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <input type="text" class="comp-name" placeholder="펫 이름 5" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 2" onkeyup="if(window.event.keyCode==13)comparePets()">
+            <input type="text" class="comp-name" placeholder="펫 이름 3" onkeyup="if(window.event.keyCode==13)comparePets()">
+            <input type="text" class="comp-name" placeholder="펫 이름 4" onkeyup="if(window.event.keyCode==13)comparePets()">
+            <input type="text" class="comp-name" placeholder="펫 이름 5" onkeyup="if(window.event.keyCode==13)comparePets()">
             <button class="btn-comp" onclick="comparePets()">비교하기</button>
         </div>
         <div class="table-container">
@@ -112,20 +101,42 @@
                     </tr>
                 </thead>
                 <tbody id="compareBody">
-                    <tr><td colspan="7" style="padding:40px; color:var(--text-dim);">비교할 펫 이름을 입력해 주세요 (최대 5마리)</td></tr>
+                    <tr><td colspan="7" style="padding:20px; color:var(--text-dim);">비교할 이름을 입력하세요.</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-title">🔍 전체 펫 도감</div>
+        <div class="section-title">🔍 데이터 필터링</div>
+        <div class="controls">
+            <input type="text" id="nameFilter" placeholder="이름 검색..." oninput="applyFilters()" style="flex:2;">
+            <select id="statType" onchange="applyFilters()">
+                <option value="공격력">성장 공격력</option>
+                <option value="방어력">성장 방어력</option>
+                <option value="순발력">성장 순발력</option>
+                <option value="체력">성장 체력</option>
+            </select>
+            <input type="number" id="statMin" placeholder="성장률 n 이상" step="0.01" oninput="applyFilters()" style="width:110px;">
+            
+            <select id="attrType" onchange="applyFilters()">
+                <option value="none">속성 선택</option>
+                <option value="지">지</option><option value="수">수</option><option value="화">화</option><option value="풍">풍</option>
+            </select>
+            <input type="number" id="attrMin" placeholder="n 이상" oninput="applyFilters()" style="width:70px;">
+        </div>
+
         <div class="table-container" style="max-height: 500px;">
             <table>
                 <thead>
                     <tr>
-                        <th>#</th><th>이름</th><th>속성1</th><th>속성2</th>
-                        <th>체력 (초기/성장)</th><th>공격 (초기/성장)</th><th>방어 (초기/성장)</th><th>순발 (초기/성장)</th>
+                        <th onclick="sortTable('번호')"># ↕</th>
+                        <th onclick="sortTable('이름')">이름 ↕</th>
+                        <th>속성1</th><th>속성2</th>
+                        <th onclick="sortTable('체력')">체력 (성장) ↕</th>
+                        <th onclick="sortTable('공격력')">공격 (성장) ↕</th>
+                        <th onclick="sortTable('방어력')">방어 (성장) ↕</th>
+                        <th onclick="sortTable('순발력')">순발 (성장) ↕</th>
                     </tr>
                 </thead>
                 <tbody id="mainBody"></tbody>
@@ -137,62 +148,101 @@
 <script>
     const JSON_URL = 'https://raw.githubusercontent.com/storazi/cigar/main/petdata.json';
     let allData = [];
+    let currentData = [];
+    let sortState = { key: '', direction: true };
 
     async function loadData() {
         try {
             const response = await fetch(JSON_URL);
             allData = await response.json();
+            currentData = [...allData];
             document.getElementById('loading').style.display = 'none';
-            renderMainTable(allData);
-        } catch (e) {
-            document.getElementById('loading').innerText = '❌ 데이터 로드 실패';
-        }
+            applyFilters();
+        } catch (e) { document.getElementById('loading').innerText = '❌ 로드 실패'; }
     }
 
-    function formatStat(val, isHighlight = false) {
-        if (!Array.isArray(val)) return `<span>${val}</span>`;
-        return `
-            <span class="val-init">${val[0]}</span>
-            <span class="val-growth" style="${isHighlight ? 'color:#ff9500;' : ''}">${val[1]}</span>
-        `;
+    // 배열 구조에서 성장률(index 1) 추출 헬퍼
+    function gv(item, key) {
+        return Array.isArray(item[key]) ? item[key][1] : 0;
     }
 
-    function renderMainTable(data) {
+    function applyFilters() {
+        const nameQ = document.getElementById('nameFilter').value.toLowerCase();
+        const statKey = document.getElementById('statType').value;
+        const statMin = parseFloat(document.getElementById('statMin').value) || 0;
+        const targetAttr = document.getElementById('attrType').value;
+        const attrMin = parseInt(document.getElementById('attrMin').value) || 0;
+
+        currentData = allData.filter(item => {
+            const nameMatch = item.이름.toLowerCase().includes(nameQ);
+            const statMatch = gv(item, statKey) >= statMin;
+            
+            let attrMatch = true;
+            if (targetAttr !== "none") {
+                attrMatch = false;
+                ["속성1", "속성2"].forEach(key => {
+                    const val = item[key] || "";
+                    if (val.startsWith(targetAttr)) {
+                        const num = parseInt(val.replace(targetAttr, "")) || 0;
+                        if (num >= attrMin) attrMatch = true;
+                    }
+                });
+            }
+            return nameMatch && statMatch && attrMatch;
+        });
+        renderTable();
+    }
+
+    function sortTable(key) {
+        sortState.direction = (sortState.key === key) ? !sortState.direction : false;
+        sortState.key = key;
+
+        currentData.sort((a, b) => {
+            let v1, v2;
+            if (['체력', '공격력', '방어력', '순발력'].includes(key)) {
+                v1 = gv(a, key); v2 = gv(b, key);
+            } else {
+                v1 = a[key]; v2 = b[key];
+            }
+            if (v1 < v2) return sortState.direction ? 1 : -1;
+            if (v1 > v2) return sortState.direction ? -1 : 1;
+            return 0;
+        });
+        renderTable();
+    }
+
+    function renderTable() {
         const tbody = document.getElementById('mainBody');
-        tbody.innerHTML = data.map(item => `
+        tbody.innerHTML = currentData.map(item => `
             <tr>
                 <td style="color:var(--text-dim)">${item.번호}</td>
                 <td><strong>${item.이름}</strong></td>
                 <td><span class="badge ${item.속성1[0]}">${item.속성1}</span></td>
                 <td>${item.속성2 ? `<span class="badge ${item.속성2[0]}">${item.속성2}</span>` : '-'}</td>
-                <td>${formatStat(item.체력)}</td>
-                <td>${formatStat(item.공격력, true)}</td>
-                <td>${formatStat(item.방어력)}</td>
-                <td>${formatStat(item.순발력)}</td>
+                <td><span class="val-init">${item.체력[0]}</span><span class="val-growth">${item.체력[1]}</span></td>
+                <td><span class="val-init">${item.공격력[0]}</span><span class="val-growth" style="color:#ff9500">${item.공격력[1]}</span></td>
+                <td><span class="val-init">${item.방어력[0]}</span><span class="val-growth">${item.방어력[1]}</span></td>
+                <td><span class="val-init">${item.순발력[0]}</span><span class="val-growth">${item.순발력[1]}</span></td>
             </tr>`).join('');
     }
 
     function comparePets() {
-        const inputs = document.querySelectorAll('.comp-name');
-        const names = Array.from(inputs).map(i => i.value.trim()).filter(v => v !== "");
+        const names = Array.from(document.querySelectorAll('.comp-name')).map(i => i.value.trim()).filter(v => v);
         const rows = allData.filter(item => names.includes(item.이름));
         const tbody = document.getElementById('compareBody');
         
-        if (rows.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-dim); padding:30px;">일치하는 펫이 없습니다.</td></tr>';
-            return;
-        }
+        if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" style="padding:20px; color:#777;">데이터 없음</td></tr>'; return; }
 
         tbody.innerHTML = rows.map(item => {
-            const total = (item.공격력[1] + item.방어력[1] + item.순발력[1]).toFixed(3);
+            const total = (gv(item,'공격력') + gv(item,'방어력') + gv(item,'순발력')).toFixed(3);
             return `
                 <tr>
                     <td><strong>${item.이름}</strong></td>
                     <td><span class="badge ${item.속성1[0]}">${item.속성1}</span> ${item.속성2 ? `<span class="badge ${item.속성2[0]}">${item.속성2}</span>` : ''}</td>
-                    <td>${formatStat(item.체력)}</td>
-                    <td>${formatStat(item.공격력)}</td>
-                    <td>${formatStat(item.방어력)}</td>
-                    <td>${formatStat(item.순발력)}</td>
+                    <td><span class="val-init">${item.체력[0]}</span><span class="val-growth">${item.체력[1]}</span></td>
+                    <td><span class="val-init">${item.공격력[0]}</span><span class="val-growth">${item.공격력[1]}</span></td>
+                    <td><span class="val-init">${item.방어력[0]}</span><span class="val-growth">${item.방어력[1]}</span></td>
+                    <td><span class="val-init">${item.순발력[0]}</span><span class="val-growth">${item.순발력[1]}</span></td>
                     <td class="total-col" style="font-size:18px;">${total}</td>
                 </tr>`;
         }).join('');
