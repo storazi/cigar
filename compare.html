@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>페트 능력치 비교</title>
+    <title>펫 마스터 - 시가 에디션</title>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -18,93 +18,45 @@
             font-family: 'Pretendard', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0;
-            padding: 10px;
-            font-size: 14px;
+            margin: 0; padding: 10px; font-size: 14px;
         }
 
-        /* 스크롤바 커스텀 */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #444; }
-
         .container { max-width: 100%; margin: auto; }
-
         .section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 20px; margin-bottom: 20px;
         }
 
         .section-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #ffd447;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 1.1em; font-weight: bold; margin-bottom: 15px;
+            color: #ffd447; display: flex; align-items: center; gap: 8px;
         }
 
-        .info-text { font-size: 0.8em; color: var(--text-dim); margin-bottom: 15px; }
-
-        /* 입력창 & 버튼 스타일 */
         .input-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px; }
-        input, select {
-            background: #000;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            outline: none;
+        input {
+            background: #000; border: 1px solid var(--border-color);
+            color: #fff; padding: 10px; border-radius: 8px; outline: none;
         }
         input:focus { border-color: #ffd447; }
 
-        .comp-name { border: 1px solid #444; width: 120px; }
-        
-        .btn {
-            background: var(--accent-gold);
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* 테이블 스타일 */
         .table-container { 
-            overflow-x: auto; 
-            border-radius: 10px; 
-            border: 1px solid var(--border-color); 
-            background: #000;
+            overflow-x: auto; border-radius: 10px; 
+            border: 1px solid var(--border-color); background: #000;
         }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
         th { 
-            background: var(--table-header); 
-            color: #ffd447; 
-            padding: 12px; 
-            font-weight: 600; 
-            border-bottom: 2px solid var(--border-color);
-            cursor: pointer;
+            background: var(--table-header); color: #ffd447; 
+            padding: 12px; border-bottom: 2px solid var(--border-color);
         }
         td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        tr:hover { background: rgba(255, 255, 255, 0.03); }
 
-        /* 속성 뱃지 */
         .badge { padding: 3px 8px; border-radius: 4px; color: white; font-weight: bold; font-size: 11px; display: inline-block; }
         .지 { background-color: #2ecc71; } .수 { background-color: #3498db; }
         .풍 { background-color: #f1c40f; color: #000; } .화 { background-color: #e74c3c; }
 
-        /* 강조 열 */
         .total-col { color: #ffd447; font-weight: bold; background: rgba(255, 212, 71, 0.05); }
-        .atk-col { color: #ff9500; font-weight: bold; }
-
         #loading { color: #ffd447; text-align: center; padding: 20px; font-weight: bold; }
     </style>
 </head>
@@ -115,14 +67,11 @@
 
     <div class="section">
         <div class="section-title">⚖️ 성장률 집중 비교</div>
-        <div class="info-text">이름 입력 후 엔터 혹은 비교하기 버튼을 누르세요. (합계 = 공+방+순)</div>
         <div class="input-row">
             <input type="text" class="comp-name" placeholder="펫 이름 1" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <input type="text" class="comp-name" placeholder="펫 이름 2" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <input type="text" class="comp-name" placeholder="펫 이름 3" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <input type="text" class="comp-name" placeholder="펫 이름 4" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <input type="text" class="comp-name" placeholder="펫 이름 5" onkeyup="if(window.event.keyCode==13){comparePets()}">
-            <button class="btn" onclick="comparePets()">비교하기</button>
+            <button onclick="comparePets()" style="background:var(--accent-gold); border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer;">비교하기</button>
         </div>
         <div class="table-container">
             <table>
@@ -132,44 +81,19 @@
                         <th style="color:#ff9500">합계(공방순)</th>
                     </tr>
                 </thead>
-                <tbody id="compareBody">
-                    <tr><td colspan="7" style="padding:30px; color:var(--text-dim);">비교할 펫 이름을 입력해 주세요.</td></tr>
-                </tbody>
+                <tbody id="compareBody"></tbody>
             </table>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-title">🔍 펫 데이터 필터</div>
-        <div class="input-row">
-            <input type="text" id="nameFilter" placeholder="이름 검색..." oninput="applyFilters()">
-            <select id="statType" onchange="applyFilters()">
-                <option value="성장공격력">성장 공격</option>
-                <option value="성장방어력">성장 방어</option>
-                <option value="성장순발력">성장 순발</option>
-                <option value="성장체력">성장 체력</option>
-            </select>
-            <input type="number" id="statMin" placeholder="0" step="0.1" style="width:70px" oninput="applyFilters()">
-            
-            <select id="attrType" onchange="applyFilters()">
-                <option value="none">속성</option>
-                <option value="지">지</option><option value="수">수</option>
-                <option value="화">화</option><option value="풍">풍</option>
-            </select>
-            <input type="number" id="attrMin" placeholder="0" style="width:50px" oninput="applyFilters()">
-        </div>
-        
-        <div class="table-container" style="max-height: 400px;">
-            <table id="mainTable">
+        <div class="section-title">🔍 전체 펫 목록 (성장률 기준)</div>
+        <div class="table-container" style="max-height: 500px;">
+            <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable('번호')">#</th>
-                        <th onclick="sortTable('이름')">이름</th>
-                        <th>속성1</th><th>속성2</th>
-                        <th onclick="sortTable('성장체력')">성장 체</th>
-                        <th onclick="sortTable('성장공격력')">성장 공</th>
-                        <th onclick="sortTable('성장방어력')">성장 방</th>
-                        <th onclick="sortTable('성장순발력')">성장 순</th>
+                        <th>#</th><th>이름</th><th>속성1</th><th>속성2</th>
+                        <th>성장 체</th><th>성장 공</th><th>성장 방</th><th>성장 순</th>
                     </tr>
                 </thead>
                 <tbody id="mainBody"></tbody>
@@ -179,104 +103,71 @@
 </div>
 
 <script>
-    // ⚠️ GitHub Raw URL 설정
     const JSON_URL = 'https://raw.githubusercontent.com/storazi/cigar/main/petdata.json';
-    
     let allData = [];
-    let sortDirection = true;
 
     async function loadData() {
         try {
             const response = await fetch(JSON_URL);
             allData = await response.json();
             document.getElementById('loading').style.display = 'none';
-            applyFilters();
-        } catch (error) {
-            document.getElementById('loading').innerText = '데이터 로드 실패';
+            renderMainTable(allData);
+        } catch (e) {
+            document.getElementById('loading').innerText = '❌ 로드 실패';
         }
     }
 
-    function applyFilters() {
-        const nameQuery = document.getElementById('nameFilter').value.toLowerCase();
-        const statKey = document.getElementById('statType').value;
-        const statMin = parseFloat(document.getElementById('statMin').value) || 0;
-        const targetAttr = document.getElementById('attrType').value;
-        const attrMin = parseInt(document.getElementById('attrMin').value) || 0;
-
-        const filtered = allData.filter(item => {
-            const nameMatch = item["이름"].toLowerCase().includes(nameQuery);
-            const statMatch = (parseFloat(item[statKey]) || 0) >= statMin;
-            let attrMatch = true;
-            if (targetAttr !== "none") {
-                attrMatch = false;
-                ["속성1", "속성2"].forEach(key => {
-                    if (item[key] && item[key].startsWith(targetAttr)) {
-                        const val = parseInt(item[key].replace(targetAttr, "")) || 0;
-                        if (val >= attrMin) attrMatch = true;
-                    }
-                });
-            }
-            return nameMatch && statMatch && attrMatch;
-        });
-        renderMainTable(filtered);
+    // 배열 내 1번 인덱스(성장률)를 가져오는 함수
+    function getGrowth(val) {
+        return Array.isArray(val) ? val[1] : val;
     }
 
     function renderMainTable(data) {
         const tbody = document.getElementById('mainBody');
         tbody.innerHTML = data.map(item => `
             <tr>
-                <td style="color:var(--text-dim)">${item["번호"]}</td>
-                <td><strong>${item["이름"]}</strong></td>
-                <td><span class="badge ${item["속성1"][0]}">${item["속성1"]}</span></td>
-                <td>${item["속성2"] ? `<span class="badge ${item["속성2"][0]}">${item["속성2"]}</span>` : '-'}</td>
-                <td>${item["성장체력"]}</td>
-                <td class="atk-col">${item["성장공격력"]}</td>
-                <td>${item["성장방어력"]}</td>
-                <td>${item["성장순발력"]}</td>
-            </tr>
-        `).join('');
+                <td style="color:var(--text-dim)">${item.번호}</td>
+                <td><strong>${item.이름}</strong></td>
+                <td><span class="badge ${item.속성1[0]}">${item.속성1}</span></td>
+                <td>${item.속성2 ? `<span class="badge ${item.속성2[0]}">${item.속성2}</span>` : '-'}</td>
+                <td>${getGrowth(item.체력)}</td>
+                <td style="color:#ff9500; font-weight:bold;">${getGrowth(item.공격력)}</td>
+                <td>${getGrowth(item.방어력)}</td>
+                <td>${getGrowth(item.순발력)}</td>
+            </tr>`).join('');
     }
 
     function comparePets() {
         const inputs = document.querySelectorAll('.comp-name');
-        const searchNames = Array.from(inputs).map(i => i.value.trim()).filter(v => v !== "");
-        const compareRows = allData.filter(item => searchNames.includes(item["이름"]));
+        const names = Array.from(inputs).map(i => i.value.trim()).filter(v => v !== "");
+        const rows = allData.filter(item => names.includes(item.이름));
         const tbody = document.getElementById('compareBody');
         
-        if (compareRows.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-dim)">일치하는 펫이 없습니다.</td></tr>';
+        if (rows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-dim)">데이터가 없습니다.</td></tr>';
             return;
         }
 
-        tbody.innerHTML = compareRows.map(item => {
-            const total = (parseFloat(item["성장공격력"]) + parseFloat(item["성장방어력"]) + parseFloat(item["성장순발력"])).toFixed(3);
+        tbody.innerHTML = rows.map(item => {
+            const atk = parseFloat(getGrowth(item.공격력)) || 0;
+            const def = parseFloat(getGrowth(item.방어력)) || 0;
+            const spd = parseFloat(getGrowth(item.순발력)) || 0;
+            const total = (atk + def + spd).toFixed(3);
+            
             return `
                 <tr>
-                    <td><strong>${item["이름"]}</strong></td>
-                    <td><span class="badge ${item["속성1"][0]}">${item["속성1"]}</span> ${item["속성2"] ? `<span class="badge ${item["속성2"][0]}">${item["속성2"]}</span>` : ''}</td>
-                    <td>${item["성장체력"]}</td>
-                    <td>${item["성장공격력"]}</td>
-                    <td>${item["성장방어력"]}</td>
-                    <td>${item["성장순발력"]}</td>
+                    <td><strong>${item.이름}</strong></td>
+                    <td><span class="badge ${item.속성1[0]}">${item.속성1}</span></td>
+                    <td>${getGrowth(item.체력)}</td>
+                    <td>${atk}</td>
+                    <td>${def}</td>
+                    <td>${spd}</td>
                     <td class="total-col">${total}</td>
-                </tr>
-            `;
+                </tr>`;
         }).join('');
-    }
-
-    function sortTable(key) {
-        sortDirection = !sortDirection;
-        allData.sort((a, b) => {
-            let v1 = isNaN(a[key]) ? a[key] : parseFloat(a[key]);
-            let v2 = isNaN(b[key]) ? b[key] : parseFloat(b[key]);
-            return sortDirection ? (v1 > v2 ? 1 : -1) : (v1 < v2 ? 1 : -1);
-        });
-        applyFilters();
     }
 
     loadData();
 </script>
 </body>
 </html>
-
-
