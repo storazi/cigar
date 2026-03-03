@@ -34,12 +34,26 @@
             color: #ffd447; display: flex; align-items: center; gap: 8px;
         }
 
-        .input-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px; }
+        /* 5개 입력창을 위한 그리드 레이아웃 */
+        .input-row { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+            gap: 10px; 
+            margin-bottom: 15px; 
+        }
+        
         input {
             background: #000; border: 1px solid var(--border-color);
-            color: #fff; padding: 10px; border-radius: 8px; outline: none; width: 130px;
+            color: #fff; padding: 10px; border-radius: 8px; outline: none;
+            width: 100%;
         }
-        input:focus { border-color: #ffd447; }
+        input:focus { border-color: #ffd447; box-shadow: 0 0 5px rgba(255, 212, 71, 0.2); }
+
+        .btn-comp {
+            background: var(--accent-gold); border: none; padding: 10px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer;
+            grid-column: span 1;
+        }
 
         .table-container { 
             overflow-x: auto; border-radius: 10px; 
@@ -51,9 +65,8 @@
             padding: 12px; border-bottom: 2px solid var(--border-color);
             font-size: 0.9em;
         }
-        td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border-color); line-height: 1.4; }
+        td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border-color); }
 
-        /* 초기치/성장률 구분 스타일 */
         .val-init { display: block; font-size: 11px; color: #777; }
         .val-growth { display: block; font-size: 14px; font-weight: 600; }
 
@@ -63,12 +76,12 @@
 
         .total-col { color: #ffd447; font-weight: bold; background: rgba(255, 212, 71, 0.05); border-left: 1px solid var(--border-color); }
         #loading { color: #ffd447; text-align: center; padding: 20px; font-weight: bold; }
-        
-        .btn-comp {
-            background: var(--accent-gold); border: none; padding: 10px 20px; 
-            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+
+        /* 모바일 대응 */
+        @media (max-width: 600px) {
+            .input-row { grid-template-columns: repeat(2, 1fr); }
+            .btn-comp { grid-column: span 2; }
         }
-        .btn-comp:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -77,11 +90,13 @@
     <div id="loading">✨ 부족 데이터 동기화 중...</div>
 
     <div class="section">
-        <div class="section-title">⚖️ 성장률 집중 비교</div>
+        <div class="section-title">⚖️ 성장률 집중 비교 (최대 5마리)</div>
         <div class="input-row">
             <input type="text" class="comp-name" placeholder="펫 이름 1" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <input type="text" class="comp-name" placeholder="펫 이름 2" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <input type="text" class="comp-name" placeholder="펫 이름 3" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 4" onkeyup="if(window.event.keyCode==13){comparePets()}">
+            <input type="text" class="comp-name" placeholder="펫 이름 5" onkeyup="if(window.event.keyCode==13){comparePets()}">
             <button class="btn-comp" onclick="comparePets()">비교하기</button>
         </div>
         <div class="table-container">
@@ -97,7 +112,7 @@
                     </tr>
                 </thead>
                 <tbody id="compareBody">
-                    <tr><td colspan="7" style="padding:40px; color:var(--text-dim);">이름을 입력하고 비교하기를 눌러주세요.</td></tr>
+                    <tr><td colspan="7" style="padding:40px; color:var(--text-dim);">비교할 펫 이름을 입력해 주세요 (최대 5마리)</td></tr>
                 </tbody>
             </table>
         </div>
@@ -134,15 +149,11 @@
         }
     }
 
-    // 데이터를 초기치와 성장률로 나누어 HTML로 반환하는 함수
     function formatStat(val, isHighlight = false) {
         if (!Array.isArray(val)) return `<span>${val}</span>`;
-        const init = val[0];
-        const growth = val[1];
-        const colorStyle = isHighlight ? 'color:#ff9500;' : '';
         return `
-            <span class="val-init">${init}</span>
-            <span class="val-growth" style="${colorStyle}">${growth}</span>
+            <span class="val-init">${val[0]}</span>
+            <span class="val-growth" style="${isHighlight ? 'color:#ff9500;' : ''}">${val[1]}</span>
         `;
     }
 
@@ -173,15 +184,11 @@
         }
 
         tbody.innerHTML = rows.map(item => {
-            const atkG = item.공격력[1] || 0;
-            const defG = item.방어력[1] || 0;
-            const spdG = item.순발력[1] || 0;
-            const total = (atkG + defG + spdG).toFixed(3);
-            
+            const total = (item.공격력[1] + item.방어력[1] + item.순발력[1]).toFixed(3);
             return `
                 <tr>
                     <td><strong>${item.이름}</strong></td>
-                    <td><span class="badge ${item.속성1[0]}">${item.속성1}</span></td>
+                    <td><span class="badge ${item.속성1[0]}">${item.속성1}</span> ${item.속성2 ? `<span class="badge ${item.속성2[0]}">${item.속성2}</span>` : ''}</td>
                     <td>${formatStat(item.체력)}</td>
                     <td>${formatStat(item.공격력)}</td>
                     <td>${formatStat(item.방어력)}</td>
