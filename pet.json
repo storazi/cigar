@@ -297,7 +297,9 @@
     "티오":{ "initialCoefficient": 22, "healthCoefficient": 27, "attackCoefficient": 27, "defenseCoefficient": 45, "agilityCoefficient": 5 },
     "데블로스":{ "initialCoefficient": 23, "healthCoefficient": 20, "attackCoefficient": 31, "defenseCoefficient": 11, "agilityCoefficient": 27 },
     "푸타푸타":{ "initialCoefficient": 23, "healthCoefficient": 23, "attackCoefficient": 27, "defenseCoefficient": 14, "agilityCoefficient": 39 },
-    "사이록스":{ "initialCoefficient": 25, "healthCoefficient": 26, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 30 }
+    "사이록스":{ "initialCoefficient": 25, "healthCoefficient": 26, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 30 },
+    "화이트링":{ "initialCoefficient": 24, "healthCoefficient": 27, "attackCoefficient": 23, "defenseCoefficient": 30, "agilityCoefficient": 24 }
+
 
 
 
