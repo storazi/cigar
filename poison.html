@@ -148,7 +148,7 @@
         if (d_V === 0) return;
 
         const pure_D = d_D; 
-        const real_V = (d_V - d_S - d_T + (pure_D * 1.05)) / 3.8;
+        const real_V = (d_V - d_S - d_T + (pure_D * 1.05)) / 4.2;
         const raw_V = Math.round(real_V * 100);
         const raw_S = Math.round((d_S - real_V * 0.1 - (d_T - real_V * 0.1 - (d_S - real_V * 0.1) * 0.1) * 0.1 - pure_D * 0.05) * 100);
         const raw_T = Math.round((d_T - real_V * 0.1 - (d_S - real_V * 0.1) * 0.1 - pure_D * 0.05) * 100);
