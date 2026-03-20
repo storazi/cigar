@@ -304,7 +304,8 @@
     "푸모나스":{ "initialCoefficient": 27, "healthCoefficient": 54, "attackCoefficient": 32, "defenseCoefficient": 22, "agilityCoefficient": 8 },
     "기비노":{ "initialCoefficient": 26, "healthCoefficient": 26, "attackCoefficient": 40, "defenseCoefficient": 16, "agilityCoefficient": 22 },
     "마우":{ "initialCoefficient": 26, "healthCoefficient": 30, "attackCoefficient": 37, "defenseCoefficient": 15, "agilityCoefficient": 25 },
-    "암풍":{ "initialCoefficient": 24, "healthCoefficient": 28, "attackCoefficient": 35, "defenseCoefficient": 13, "agilityCoefficient": 30 }
+    "암풍":{ "initialCoefficient": 24, "healthCoefficient": 28, "attackCoefficient": 35, "defenseCoefficient": 13, "agilityCoefficient": 30 ,
+    "뇌호":{ "initialCoefficient": 18, "healthCoefficient": 30, "attackCoefficient": 46, "defenseCoefficient": 19, "agilityCoefficient": 42 }
 
 
 
