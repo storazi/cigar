@@ -307,7 +307,17 @@
     "암풍":{ "initialCoefficient": 24, "healthCoefficient": 28, "attackCoefficient": 35, "defenseCoefficient": 13, "agilityCoefficient": 30 },
     "뇌호":{ "initialCoefficient": 18, "healthCoefficient": 30, "attackCoefficient": 46, "defenseCoefficient": 19, "agilityCoefficient": 42 },
     "아마란스":{ "initialCoefficient": 26, "healthCoefficient": 28, "attackCoefficient": 36, "defenseCoefficient": 15, "agilityCoefficient": 28 },
-    "그리프스":{ "initialCoefficient": 26, "healthCoefficient": 24, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 33 }
+    "그리프스":{ "initialCoefficient": 26, "healthCoefficient": 24, "attackCoefficient": 34, "defenseCoefficient": 14, "agilityCoefficient": 33 },
+    "메카비스":  {"initialCoefficient" : 25, "healthCoefficient" :  25, "attackCoefficient" :  34, "defenseCoefficient" :  16, "agilityCoefficient" :  30}, 
+    "메카카키":  {"initialCoefficient" : 17, "healthCoefficient" :  24, "attackCoefficient" :  32, "defenseCoefficient" :  9, "agilityCoefficient" :  39}, 
+    "물범":  {"initialCoefficient" : 23, "healthCoefficient" :  30, "attackCoefficient" :  35, "defenseCoefficient" :  15, "agilityCoefficient" :  26}, 
+    "물북이":  {"initialCoefficient" : 16, "healthCoefficient" :  30, "attackCoefficient" :  22, "defenseCoefficient" :  36, "agilityCoefficient" :  6}, 
+    "헤티아":  {"initialCoefficient" : 25, "healthCoefficient" :  31, "attackCoefficient" :  39, "defenseCoefficient" :  16, "agilityCoefficient" :  2}, 
+    "카이로스":  {"initialCoefficient" : 27, "healthCoefficient" :  25, "attackCoefficient" :  37, "defenseCoefficient" :  17, "agilityCoefficient" :  26}, 
+    "광룡":  {"initialCoefficient" : 15, "healthCoefficient" :  43, "attackCoefficient" :  58, "defenseCoefficient" :  33, "agilityCoefficient" :  53}, 
+    "깡우비":  {"initialCoefficient" : 20, "healthCoefficient" :  48, "attackCoefficient" :  39, "defenseCoefficient" :  14, "agilityCoefficient" :  13}, 
+    "도르도르":  {"initialCoefficient" : 23, "healthCoefficient" :  27, "attackCoefficient" :  33, "defenseCoefficient" :  16, "agilityCoefficient" :  30}, 
+    "불그리":  {"initialCoefficient" : 10, "healthCoefficient" :  23, "attackCoefficient" :  31, "defenseCoefficient" :  13, "agilityCoefficient" :  30}
 
 
 
