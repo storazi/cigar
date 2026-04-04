@@ -317,7 +317,10 @@
     "광룡":  {"initialCoefficient" : 15, "healthCoefficient" :  43, "attackCoefficient" :  58, "defenseCoefficient" :  33, "agilityCoefficient" :  53}, 
     "깡우비":  {"initialCoefficient" : 20, "healthCoefficient" :  48, "attackCoefficient" :  39, "defenseCoefficient" :  14, "agilityCoefficient" :  13}, 
     "도르도르":  {"initialCoefficient" : 23, "healthCoefficient" :  27, "attackCoefficient" :  33, "defenseCoefficient" :  16, "agilityCoefficient" :  30}, 
-    "불그리":  {"initialCoefficient" : 10, "healthCoefficient" :  23, "attackCoefficient" :  31, "defenseCoefficient" :  13, "agilityCoefficient" :  30}
+    "불그리":  {"initialCoefficient" : 10, "healthCoefficient" :  23, "attackCoefficient" :  31, "defenseCoefficient" :  13, "agilityCoefficient" :  30},
+    "핑크토끼":  {"initialCoefficient" : 23, "healthCoefficient" :  23, "attackCoefficient" :  31, "defenseCoefficient" :  15, "agilityCoefficient" :  29},
+    "메카타이혼":  {"initialCoefficient" : 28, "healthCoefficient" :  27, "attackCoefficient" :  32, "defenseCoefficient" :  17, "agilityCoefficient" :  30}
+
 
 
 
